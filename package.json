@@ -1,0 +1,11 @@
+{
+  "name": "web-exam",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "start",
+    "stop": "stop",
+    "test": "test",
+    "build": "build"
+  }
+}
