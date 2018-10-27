@@ -23,6 +23,16 @@ app.get("/users", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
+  if (!req.username || !req.password) {
+    res.status(400).send();
+    return;
+  }
+  User.findOne({ username: req.username }, (err, user) => {
+    if (err || user) {
+      res.status(500).send(err);
+    }
+  });
+
   const user = new User(req.body);
 
   user.save((err, savedUser) => {
