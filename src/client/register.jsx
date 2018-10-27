@@ -21,6 +21,24 @@ class Register extends Component {
     );
   }
 
+  createUser() {
+    fetch("http://localhost:3000/users", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password // TODO: Encrypt
+      })
+    })
+      .then(res => res.json())
+      .then(savedUser => {
+        console.log(savedUser);
+      })
+      .catch(err => console.error(err));
+  }
+
   render() {
     return (
       <form
@@ -32,7 +50,7 @@ class Register extends Component {
             alert("Invalid input");
             return;
           }
-          alert(JSON.stringify(this.state, null, "\t"));
+          this.createUser();
         }}
       >
         <h1>Register</h1>
@@ -71,7 +89,7 @@ class Register extends Component {
               type="password"
               className="form-control"
               placeholder="***"
-              onChange={e => this.setState({ comfirmPassword: e.target.value })}
+              onChange={e => this.setState({ comfirm: e.target.value })}
             />
           </label>
         </div>
