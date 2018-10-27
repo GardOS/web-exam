@@ -22,4 +22,16 @@ app.get("/users", (req, res) => {
   });
 });
 
+app.post("/users", (req, res) => {
+  const user = new User(req.body);
+
+  user.save((err, savedUser) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.send(savedUser);
+  });
+});
+
 app.listen(3000, () => console.log("Listening on port 3000."));
