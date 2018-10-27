@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "main": "index.jsx",
   "scripts": {
-		"start": "webpack-dev-server --mode development",
-    "server": "node src/server/server.js",
-    "stop": "echo \"Stop\"",
-    "test": "echo \"No tests\"",
-    "build": "webpack --mode production"
+    "start": "npm run build && node src/server/server.js",
+    "build": "webpack --mode production",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "client": "webpack-dev-server --mode development --hot",
+    "server": "nodemon src/server/server.js",
+    "db": "docker-compose up",
+    "stop": "docker-compose down",
+    "test": "echo \"No tests\""
   },
   "dependencies": {
     "react": "^16.6.0",
@@ -18,7 +21,9 @@
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
     "babel-loader": "^8.0.4",
+    "concurrently": "^4.0.1",
     "css-loader": "^1.0.0",
+    "nodemon": "^1.18.5",
     "react-hot-loader": "^4.3.11",
     "style-loader": "^0.23.1",
     "webpack": "^4.23.0",
