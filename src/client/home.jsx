@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Register from "./register";
+import Login from "./login";
 
 class Home extends Component {
   constructor() {
@@ -12,7 +13,7 @@ class Home extends Component {
     return (
       <div className="row">
         <Register className="col" />
-        <Register className="col" />
+        <Login className="col" />
       </div>
     );
   }
