@@ -9,6 +9,7 @@
   "rules": {
     "prettier/prettier": ["error"],
     "comma-dangle": "off",
-    "react/destructuring-assignment": ["never"]
+    "react/destructuring-assignment": ["never"],
+    "no-console": "off"
   }
 }

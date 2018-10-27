@@ -7,12 +7,16 @@
     "build": "webpack --mode production",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "webpack-dev-server --mode development --hot",
-    "server": "nodemon src/server/server.js",
-    "db": "docker-compose up",
+    "server": "npm run db && nodemon src/server/server.js",
+    "db": "docker-compose up -d",
     "stop": "docker-compose down",
     "test": "echo \"No tests\""
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.7",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-hot-loader": "^4.3.11"
