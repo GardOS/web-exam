@@ -22,11 +22,11 @@ class Login extends Component {
       >
         <h1>Login</h1>
         <div className="form-group">
-          <label className="w-100" htmlFor="username-input">
+          <label className="w-100" htmlFor="login-username">
             Username
             <input
               required
-              id="username-input"
+              id="login-username"
               type="text"
               className="form-control"
               placeholder="Name"
@@ -35,11 +35,11 @@ class Login extends Component {
           </label>
         </div>
         <div className="form-group">
-          <label className="w-100" htmlFor="password-input">
+          <label className="w-100" htmlFor="login-password">
             Password
             <input
               required
-              id="password-input"
+              id="login-password"
               type="password"
               className="form-control"
               placeholder="***"

@@ -7,7 +7,7 @@ class Register extends Component {
     this.state = {
       username: "",
       password: "",
-      comfirmPassword: "",
+      comfirm: "",
       termsAndConditions: false
     };
   }
@@ -16,7 +16,7 @@ class Register extends Component {
     return (
       this.state.username.length > 2 &&
       this.state.password.length > 2 &&
-      this.state.password === this.state.comfirmPassword &&
+      this.state.password === this.state.comfirm &&
       this.state.termsAndConditions
     );
   }
@@ -37,11 +37,11 @@ class Register extends Component {
       >
         <h1>Register</h1>
         <div className="form-group">
-          <label className="w-100" htmlFor="username-input">
+          <label className="w-100" htmlFor="register-username">
             Username
             <input
               required
-              id="username-input"
+              id="register-username"
               type="text"
               className="form-control"
               placeholder="Name"
@@ -50,11 +50,11 @@ class Register extends Component {
           </label>
         </div>
         <div className="form-group">
-          <label className="w-100" htmlFor="password-input">
+          <label className="w-100" htmlFor="register-password">
             Password
             <input
               required
-              id="password-input"
+              id="register-password"
               type="password"
               className="form-control"
               placeholder="***"
@@ -63,11 +63,11 @@ class Register extends Component {
           </label>
         </div>
         <div className="form-group">
-          <label className="w-100" htmlFor="confirm-password-input">
+          <label className="w-100" htmlFor="register-confirm">
             Confirm password
             <input
               required
-              id="confirm-password-input"
+              id="register-confirm"
               type="password"
               className="form-control"
               placeholder="***"
@@ -75,10 +75,10 @@ class Register extends Component {
             />
           </label>
         </div>
-        <label htmlFor="terms-and-conditions-check">
+        <label htmlFor="register-terms-and-conditions">
           <input
             required
-            id="terms-and-conditions-check"
+            id="register-terms-and-conditions"
             type="checkbox"
             onChange={e =>
               this.setState({ termsAndConditions: e.target.checked })

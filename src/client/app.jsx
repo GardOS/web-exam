@@ -5,7 +5,7 @@ import { NotFound } from "./not-found";
 
 export const App = () => (
   <div>
-    <nav className="navbar navbar-expand-sm bg-primary sticky-top">
+    <nav className="navbar navbar-expand-sm bg-info sticky-top">
       <ul className="navbar-nav">
         <li className="nav-item">
           <Link to="/" className="text-light nav-link">
@@ -20,10 +20,12 @@ export const App = () => (
       </ul>
     </nav>
     <br />
-    <Switch>
-      <Route exact path="/" component={Home} />
-      <Route component={NotFound} />
-    </Switch>
+    <div className="container">
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route component={NotFound} />
+      </Switch>
+    </div>
   </div>
 );
 
