@@ -32,16 +32,15 @@ class Register extends Component {
         password: this.state.password // TODO: Encrypt
       })
     })
-      .then(res => res.json())
       .then(res => {
         if (res.status === 400) {
-          alert("400");
+          alert("bad request");
         }
         if (res.status === 409) {
-          alert("409");
+          alert("Taken");
         }
       })
-      .catch(err => alert(`Error ${err}`));
+      .catch(err => alert(`err: ${err}`));
   }
 
   render() {
