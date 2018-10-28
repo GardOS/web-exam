@@ -33,7 +33,7 @@ app.post("/users", (req, res) => {
   const body = req.body;
 
   if (!isUserValid(body)) {
-    res.status(400).send(`body ${body.username}`);
+    res.status(400).send();
     return;
   }
 
