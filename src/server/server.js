@@ -56,7 +56,7 @@ app.post("/users", (req, res) => {
         }
 
         const payload = {
-          username: reqUser.username
+          username: newUser.username
         };
 
         const token = jwtSimple.encode(payload, secret);
