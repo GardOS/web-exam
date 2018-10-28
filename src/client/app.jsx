@@ -14,6 +14,14 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
+  componentWillMount() {
+    if (localStorage.getItem("token")) {
+      this.setState({ loggedIn: true });
+    } else {
+      this.setState({ loggedIn: false });
+    }
+  }
+
   handleLogin(token) {
     if (token) {
       this.setState({ loggedIn: true });
@@ -40,9 +48,19 @@ class App extends Component {
               </Link>
             </li>
           </ul>
-          <span className="navbar-brand">
-            {this.state.loggedIn ? "Logged in" : "Not logged in"}
-          </span>
+          {this.state.loggedIn ? (
+            <form className="form-inline">
+              <button
+                className="btn btn-outline-light"
+                type="button"
+                onClick={_ => this.handleLogin(null)}
+              >
+                Log out
+              </button>
+            </form>
+          ) : (
+            <span className="navbar-brand text-light">Not logged in</span>
+          )}
         </nav>
         <br />
         <div className="container">

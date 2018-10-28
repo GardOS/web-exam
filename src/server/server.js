@@ -96,7 +96,7 @@ app.post("/login", (req, res) => {
       };
 
       const token = jwtSimple.encode(payload, secret);
-      res.status(201).send(token);
+      res.status(200).send(token);
     }
   });
 });
