@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const jwtSimple = require("jwt-simple");
+const bcrypt = require("bcryptjs");
 const User = require("./model");
 
 const app = express();
@@ -43,12 +44,23 @@ app.post("/users", (req, res) => {
     if (dbUser) {
       res.status(409).send("Username taken");
     } else {
-      new User(reqUser).save((saveErr, newUser) => {
+      const encryptedUser = {
+        username: reqUser.username,
+        password: bcrypt.hashSync(reqUser.password, 10)
+      };
+
+      new User(encryptedUser).save((saveErr, newUser) => {
         if (saveErr) {
           res.status(500).send(saveErr);
           return;
         }
-        res.status(201).send(newUser);
+
+        const payload = {
+          username: reqUser.username
+        };
+
+        const token = jwtSimple.encode(payload, secret);
+        res.status(201).send(token);
       });
     }
   });
@@ -69,7 +81,10 @@ app.post("/login", (req, res) => {
     if (!dbUser) {
       res.status(401).send("User not found");
     } else {
-      const passwordMatches = reqUser.password === dbUser.password;
+      const passwordMatches = bcrypt.compareSync(
+        reqUser.password,
+        dbUser.password
+      );
 
       if (!passwordMatches) {
         res.status(401).send("Wrong password");
