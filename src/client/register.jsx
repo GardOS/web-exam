@@ -8,7 +8,7 @@ class Register extends Component {
       username: "",
       password: "",
       comfirm: "",
-      termsAndConditions: false
+      termsAndConditions: true
     };
   }
 
@@ -33,10 +33,15 @@ class Register extends Component {
       })
     })
       .then(res => res.json())
-      .then(savedUser => {
-        console.log(savedUser);
+      .then(res => {
+        if (res.status === 400) {
+          alert("400");
+        }
+        if (res.status === 409) {
+          alert("409");
+        }
       })
-      .catch(err => console.error(err));
+      .catch(err => alert(`Error ${err}`));
   }
 
   render() {
@@ -96,6 +101,7 @@ class Register extends Component {
         <label htmlFor="register-terms-and-conditions">
           <input
             required
+            checked
             id="register-terms-and-conditions"
             type="checkbox"
             onChange={e =>
