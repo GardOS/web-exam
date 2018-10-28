@@ -53,7 +53,7 @@ class App extends Component {
               <button
                 className="btn btn-outline-light"
                 type="button"
-                onClick={_ => this.handleLogin(null)}
+                onClick={_ => this.handleLogin(null)} // eslint-disable-line
               >
                 Log out
               </button>
