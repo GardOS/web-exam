@@ -43,7 +43,7 @@ class Register extends Component {
         } else if (res.status === 409) {
           alert("Username is taken");
         } else {
-          this.props.loginHandler(true);
+          this.props.loginHandler(res.body);
         }
       })
       .catch(err => alert(`Something went wrong. Error: ${err}`));

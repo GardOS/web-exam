@@ -14,10 +14,14 @@ class App extends Component {
     this.handleLogin = this.handleLogin.bind(this);
   }
 
-  handleLogin(isLoggedIn) {
-    this.setState({
-      loggedIn: isLoggedIn
-    });
+  handleLogin(token) {
+    if (token) {
+      this.setState({ loggedIn: true });
+      localStorage.setItem("token", token);
+    } else {
+      this.setState({ loggedIn: false });
+      localStorage.removeItem("token");
+    }
   }
 
   render() {

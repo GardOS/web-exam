@@ -32,7 +32,7 @@ class Login extends Component {
         } else if (res.status === 401) {
           alert("Username/password is wrong");
         } else {
-          this.props.loginHandler(true);
+          this.props.loginHandler(res.body);
         }
       })
       .catch(err => alert(`Something went wrong. Error: ${err}`));
