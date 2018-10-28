@@ -1,11 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const jwtSimple = require("jwt-simple");
 const User = require("./model");
 
 const app = express();
 app.use(bodyParser.json());
 app.use("/", cors("localhost:8080"));
+
+const secret = "Secret Token";
 
 const isUserValid = body => {
   if (body && body.username && body.password) {
@@ -13,10 +16,6 @@ const isUserValid = body => {
   }
   return false;
 };
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 app.get("/users", (req, res) => {
   User.find((err, users) => {
@@ -30,28 +29,84 @@ app.get("/users", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
-  const body = req.body;
+  const reqUser = req.body;
 
-  if (!isUserValid(body)) {
-    res.status(400).send();
+  if (!isUserValid(reqUser)) {
+    res.status(400).send("Invalid request");
     return;
   }
 
-  User.findOne({ username: body.username }, (findErr, existingUser) => {
+  User.findOne({ username: reqUser.username }, (findErr, dbUser) => {
     if (findErr) {
       res.status(500).send(findErr);
     }
-    if (existingUser) {
-      res.status(409).send();
+    if (dbUser) {
+      res.status(409).send("Username taken");
     } else {
-      new User(body).save((saveErr, savedUser) => {
+      new User(reqUser).save((saveErr, newUser) => {
         if (saveErr) {
           res.status(500).send(saveErr);
           return;
         }
-        res.send(savedUser);
+        res.status(201).send(newUser);
       });
     }
+  });
+});
+
+app.post("/login", (req, res) => {
+  const reqUser = req.body;
+
+  if (!isUserValid(reqUser)) {
+    res.status(400).send("Invalid request");
+    return;
+  }
+
+  User.findOne({ username: reqUser.username }, (err, dbUser) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    if (!dbUser) {
+      res.status(401).send("User not found");
+    } else {
+      const passwordMatches = reqUser.password === dbUser.password;
+
+      if (!passwordMatches) {
+        res.status(401).send("Wrong password");
+        return;
+      }
+
+      const payload = {
+        username: reqUser.username
+      };
+
+      const token = jwtSimple.encode(payload, secret);
+      res.status(201).send(token);
+    }
+  });
+});
+
+app.get("/whoami", (req, res) => {
+  const token = req.header("Authorization");
+  if (!token) {
+    res.status(401).send("No token");
+    return;
+  }
+
+  let payload;
+  try {
+    payload = jwtSimple.decode(token, secret);
+  } catch (error) {
+    res.status(401).send("Invalid token");
+    return;
+  }
+
+  User.findOne({ username: payload.username }, (err, user) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.send(user);
   });
 });
 
