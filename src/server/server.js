@@ -4,8 +4,15 @@ const bodyParser = require("body-parser");
 const User = require("./model");
 
 const app = express();
-app.use("/", cors("localhost:8080"));
 app.use(bodyParser.json());
+app.use("/", cors("localhost:8080"));
+
+const isUserValid = body => {
+  if (body && body.username && body.password) {
+    return true;
+  }
+  return false;
+};
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -23,24 +30,28 @@ app.get("/users", (req, res) => {
 });
 
 app.post("/users", (req, res) => {
-  if (!req.username || !req.password) {
-    res.status(400).send();
+  const body = req.body;
+
+  if (!isUserValid(body)) {
+    res.status(400).send(`body ${body.username}`);
     return;
   }
-  User.findOne({ username: req.username }, (err, user) => {
-    if (err || user) {
-      res.status(500).send(err);
-    }
-  });
 
-  const user = new User(req.body);
-
-  user.save((err, savedUser) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
+  User.findOne({ username: body.username }, (findErr, existingUser) => {
+    if (findErr) {
+      res.status(500).send(findErr);
     }
-    res.send(savedUser);
+    if (existingUser) {
+      res.status(409).send();
+    } else {
+      new User(body).save((saveErr, savedUser) => {
+        if (saveErr) {
+          res.status(500).send(saveErr);
+          return;
+        }
+        res.send(savedUser);
+      });
+    }
   });
 });
 
