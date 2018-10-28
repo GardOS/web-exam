@@ -1,14 +1,19 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Register extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       username: "",
       password: "",
       comfirm: "",
       termsAndConditions: true
+    };
+
+    Register.propTypes = {
+      loginHandler: PropTypes.func.isRequired
     };
   }
 
@@ -29,18 +34,19 @@ class Register extends Component {
       },
       body: JSON.stringify({
         username: this.state.username,
-        password: this.state.password // TODO: Encrypt
+        password: this.state.password
       })
     })
       .then(res => {
         if (res.status === 400) {
-          alert("bad request");
-        }
-        if (res.status === 409) {
-          alert("Taken");
+          alert("Request is invalid");
+        } else if (res.status === 409) {
+          alert("Username is taken");
+        } else {
+          this.props.loginHandler(true);
         }
       })
-      .catch(err => alert(`err: ${err}`));
+      .catch(err => alert(`Something went wrong. Error: ${err}`));
   }
 
   render() {

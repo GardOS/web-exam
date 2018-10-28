@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 class Login extends Component {
   constructor() {
@@ -8,6 +9,33 @@ class Login extends Component {
       username: "",
       password: ""
     };
+
+    Login.propTypes = {
+      loginHandler: PropTypes.func.isRequired
+    };
+  }
+
+  login() {
+    fetch("http://localhost:3000/login", {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username: this.state.username,
+        password: this.state.password
+      })
+    })
+      .then(res => {
+        if (res.status === 400) {
+          alert("Request is invalid");
+        } else if (res.status === 401) {
+          alert("Username/password is wrong");
+        } else {
+          this.props.loginHandler(true);
+        }
+      })
+      .catch(err => alert(`Something went wrong. Error: ${err}`));
   }
 
   render() {
@@ -17,7 +45,7 @@ class Login extends Component {
         onSubmit={e => {
           e.preventDefault();
 
-          alert(JSON.stringify(this.state, null, "\t"));
+          this.login();
         }}
       >
         <h1>Login</h1>
