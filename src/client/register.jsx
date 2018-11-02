@@ -13,7 +13,7 @@ class Register extends Component {
     };
 
     Register.propTypes = {
-      loginHandler: PropTypes.func.isRequired
+      userHandler: PropTypes.func.isRequired
     };
   }
 
@@ -43,7 +43,7 @@ class Register extends Component {
         } else if (res.status === 409) {
           alert("Username is taken");
         } else {
-          this.props.loginHandler(res.body);
+          this.props.userHandler(this.state.username);
         }
       })
       .catch(err => alert(`Something went wrong. Error: ${err}`));

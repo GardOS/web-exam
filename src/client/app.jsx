@@ -8,28 +8,46 @@ class App extends Component {
     super();
 
     this.state = {
-      loggedIn: false
+      username: null
     };
 
-    this.handleLogin = this.handleLogin.bind(this);
+    this.handleUser = this.handleUser.bind(this);
   }
 
-  componentWillMount() {
-    if (localStorage.getItem("token")) {
-      this.setState({ loggedIn: true });
-    } else {
-      this.setState({ loggedIn: false });
-    }
+  componentDidMount() {
+    this.isAuthenticated(); // TODO: Fix state being lost when refreshing. Related to username/id?
   }
 
-  handleLogin(token) {
-    if (token) {
-      this.setState({ loggedIn: true });
-      localStorage.setItem("token", token);
-    } else {
-      this.setState({ loggedIn: false });
-      localStorage.removeItem("token");
-    }
+  isAuthenticated() {
+    fetch("http://localhost:3000/user", { credentials: "include" })
+      .then(res => {
+        if (res.status === 200) {
+          this.handleUser(res.body.username);
+        } else if (res.status === 401) {
+          this.handleUser(null);
+        } else {
+          alert(
+            `Something went wrong when authenticating. Status: ${res.status}`
+          );
+        }
+      })
+      .catch(err => alert(`Something went wrong. Error: ${err}`));
+  }
+
+  handleUser(username) {
+    this.setState({ username });
+  }
+
+  logout() {
+    fetch("http://localhost:3000/logout")
+      .then(res => {
+        if (res.status === 204) {
+          this.handleUser(null);
+        } else {
+          alert("Something went wrong when logging out from server");
+        }
+      })
+      .catch(err => alert(`Something went wrong. Error: ${err}`));
   }
 
   render() {
@@ -48,13 +66,17 @@ class App extends Component {
               </Link>
             </li>
           </ul>
-          {this.state.loggedIn ? (
+          {this.state.username ? (
             <form className="form-inline">
               <button
                 className="btn btn-outline-light"
                 type="button"
-                onClick={_ => this.handleLogin(null)} // eslint-disable-line
+                onClick={() => {
+                  this.logout();
+                }}
               >
+                {this.state.username}
+                {"  "}
                 Log out
               </button>
             </form>
@@ -69,7 +91,7 @@ class App extends Component {
               exact
               path="/"
               render={props => (
-                <Home {...props} loginHandler={this.handleLogin} />
+                <Home {...props} userHandler={this.handleUser} />
               )}
             />
             <Route component={NotFound} />

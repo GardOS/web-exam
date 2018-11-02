@@ -11,7 +11,7 @@ class Login extends Component {
     };
 
     Login.propTypes = {
-      loginHandler: PropTypes.func.isRequired
+      userHandler: PropTypes.func.isRequired
     };
   }
 
@@ -32,7 +32,7 @@ class Login extends Component {
         } else if (res.status === 401) {
           alert("Username/password is wrong");
         } else {
-          this.props.loginHandler(res.body);
+          this.props.userHandler(this.state.username);
         }
       })
       .catch(err => alert(`Something went wrong. Error: ${err}`));

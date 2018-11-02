@@ -10,15 +10,15 @@ class Home extends Component {
     this.state = {};
 
     Home.propTypes = {
-      loginHandler: PropTypes.func.isRequired
+      userHandler: PropTypes.func.isRequired
     };
   }
 
   render() {
     return (
       <div className="row">
-        <Register className="col" loginHandler={this.props.loginHandler} />
-        <Login className="col" loginHandler={this.props.loginHandler} />
+        <Register className="col" userHandler={this.props.userHandler} />
+        <Login className="col" userHandler={this.props.userHandler} />
       </div>
     );
   }

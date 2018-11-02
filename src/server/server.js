@@ -8,8 +8,14 @@ const Strategy = require("passport-local").Strategy;
 const User = require("./model");
 
 const app = express();
+app.use(
+  cors({
+    origin: "http://localhost:8080",
+    credentials: true
+  })
+);
 app.use(bodyParser.json());
-app.use("/", cors("localhost:8080"));
+
 app.use(
   session({
     secret: "Secret Token",
@@ -72,6 +78,16 @@ app.get("/users", (req, res) => {
   });
 });
 
+app.get("/user", (req, res) => {
+  if (!req.user) {
+    res.status(401).send();
+    return;
+  }
+  res.json({
+    username: req.user.username
+  });
+});
+
 app.post("/users", (req, res) => {
   const reqUser = req.body;
 
@@ -101,7 +117,9 @@ app.post("/users", (req, res) => {
             if (loginErr) {
               res.status(500).send("Something went wrong when logging in");
             } else {
-              res.status(201).send(newUser);
+              res.status(201).json({
+                username: newUser.username
+              });
             }
           });
         }
@@ -111,22 +129,14 @@ app.post("/users", (req, res) => {
 });
 
 app.post("/login", passport.authenticate("local"), (req, res) => {
-  res.status(204).send();
+  res.json({
+    username: req.user.username
+  });
 });
 
 app.get("/logout", (req, res) => {
   req.logout();
   res.status(204).send();
-});
-
-app.get("/whoami", (req, res) => {
-  if (!req.user) {
-    res.status(401).send();
-    return;
-  }
-  res.json({
-    username: req.user.username
-  });
 });
 
 app.listen(3000, () => console.log("Listening on port 3000."));
