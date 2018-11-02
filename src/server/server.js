@@ -1,15 +1,58 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const jwtSimple = require("jwt-simple");
 const bcrypt = require("bcryptjs");
+const session = require("express-session");
+const passport = require("passport");
+const Strategy = require("passport-local").Strategy;
 const User = require("./model");
 
 const app = express();
 app.use(bodyParser.json());
 app.use("/", cors("localhost:8080"));
+app.use(
+  session({
+    secret: "Secret Token",
+    resave: false,
+    saveUninitialized: false
+  })
+);
 
-const secret = "Secret Token";
+passport.use(
+  new Strategy((username, password, cb) => {
+    User.findOne({ username }, (err, user) => {
+      if (err) {
+        return cb(err);
+      }
+      if (!user) {
+        return cb(null, false);
+      }
+      if (!bcrypt.compareSync(password, user.password)) {
+        return cb(null, false);
+      }
+      return cb(null, user);
+    });
+  })
+);
+
+passport.serializeUser((user, cb) => {
+  cb(null, user.username);
+});
+
+passport.deserializeUser((username, cb) => {
+  User.findOne({ username }, (err, user) => {
+    if (err) {
+      return cb(err);
+    }
+    if (!user) {
+      return cb(null, false);
+    }
+    return cb(null, user);
+  });
+});
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 const isUserValid = body => {
   if (body && body.username && body.password) {
@@ -40,6 +83,7 @@ app.post("/users", (req, res) => {
   User.findOne({ username: reqUser.username }, (findErr, dbUser) => {
     if (findErr) {
       res.status(500).send(findErr);
+      return;
     }
     if (dbUser) {
       res.status(409).send("Username taken");
@@ -52,76 +96,36 @@ app.post("/users", (req, res) => {
       new User(encryptedUser).save((saveErr, newUser) => {
         if (saveErr) {
           res.status(500).send(saveErr);
-          return;
+        } else {
+          req.login(newUser, loginErr => {
+            if (loginErr) {
+              res.status(500).send("Something went wrong when logging in");
+            } else {
+              res.status(201).send(newUser);
+            }
+          });
         }
-
-        const payload = {
-          username: newUser.username
-        };
-
-        const token = jwtSimple.encode(payload, secret);
-        res.status(201).send(token);
       });
     }
   });
 });
 
-app.post("/login", (req, res) => {
-  const reqUser = req.body;
+app.post("/login", passport.authenticate("local"), (req, res) => {
+  res.status(204).send();
+});
 
-  if (!isUserValid(reqUser)) {
-    res.status(400).send("Invalid request");
-    return;
-  }
-
-  User.findOne({ username: reqUser.username }, (err, dbUser) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    if (!dbUser) {
-      res.status(401).send("User not found");
-    } else {
-      const passwordMatches = bcrypt.compareSync(
-        reqUser.password,
-        dbUser.password
-      );
-
-      if (!passwordMatches) {
-        res.status(401).send("Wrong password");
-        return;
-      }
-
-      const payload = {
-        username: reqUser.username
-      };
-
-      const token = jwtSimple.encode(payload, secret);
-      res.status(200).send(token);
-    }
-  });
+app.get("/logout", (req, res) => {
+  req.logout();
+  res.status(204).send();
 });
 
 app.get("/whoami", (req, res) => {
-  const token = req.header("Authorization");
-  if (!token) {
-    res.status(401).send("No token");
+  if (!req.user) {
+    res.status(401).send();
     return;
   }
-
-  let payload;
-  try {
-    payload = jwtSimple.decode(token, secret);
-  } catch (error) {
-    res.status(401).send("Invalid token");
-    return;
-  }
-
-  User.findOne({ username: payload.username }, (err, user) => {
-    if (err) {
-      res.status(500).send(err);
-      return;
-    }
-    res.send(user);
+  res.json({
+    username: req.user.username
   });
 });
 
