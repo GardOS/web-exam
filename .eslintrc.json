@@ -12,6 +12,7 @@
     "react/destructuring-assignment": ["never"],
     "no-console": "off",
     "no-alert": "off",
-    "prefer-destructuring": "off"
+    "prefer-destructuring": "off",
+    "linebreak-style": ["error", "windows"]
   }
 }

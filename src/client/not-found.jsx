@@ -5,8 +5,7 @@ export const NotFound = () => (
   <div>
     <h1>404 page not found</h1>
     <h4>
-      Oh no! Take me
-      {"  "}
+      {"Oh no! Take me "}
       <Link to="/">
         <u>home</u>
       </Link>

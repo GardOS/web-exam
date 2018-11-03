@@ -51,7 +51,7 @@ class Login extends Component {
         <h1>Login</h1>
         <div className="form-group">
           <label className="w-100" htmlFor="login-username">
-            Username
+            {"Username"}
             <input
               required
               id="login-username"
@@ -64,7 +64,7 @@ class Login extends Component {
         </div>
         <div className="form-group">
           <label className="w-100" htmlFor="login-password">
-            Password
+            {"Password"}
             <input
               required
               id="login-password"
@@ -77,7 +77,7 @@ class Login extends Component {
         </div>
         <div>
           <button type="submit" className="btn btn-primary btn-block">
-            Login
+            {"Login"}
           </button>
         </div>
       </form>

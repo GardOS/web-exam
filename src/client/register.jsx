@@ -66,7 +66,7 @@ class Register extends Component {
         <h1>Register</h1>
         <div className="form-group">
           <label className="w-100" htmlFor="register-username">
-            Username
+            {"Username"}
             <input
               required
               id="register-username"
@@ -79,7 +79,7 @@ class Register extends Component {
         </div>
         <div className="form-group">
           <label className="w-100" htmlFor="register-password">
-            Password
+            {"Password"}
             <input
               required
               id="register-password"
@@ -92,7 +92,7 @@ class Register extends Component {
         </div>
         <div className="form-group">
           <label className="w-100" htmlFor="register-confirm">
-            Confirm password
+            {"Confirm password"}
             <input
               required
               id="register-confirm"
@@ -113,11 +113,11 @@ class Register extends Component {
               this.setState({ termsAndConditions: e.target.checked })
             }
           />
-          Forfeit soul
+          {"Forfeit soul"}
         </label>
         <div>
           <button type="submit" className="btn btn-primary btn-block">
-            Register
+            {"Register"}
           </button>
         </div>
       </form>

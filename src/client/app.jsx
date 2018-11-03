@@ -57,12 +57,12 @@ class App extends Component {
           <ul className="navbar-nav">
             <li className="nav-item">
               <Link to="/" className="text-light nav-link">
-                Home
+                {"Home"}
               </Link>
             </li>
             <li className="nav-item">
               <Link to="/NotAPage" className="text-light nav-link">
-                404
+                {"404"}
               </Link>
             </li>
           </ul>
@@ -75,9 +75,7 @@ class App extends Component {
                   this.logout();
                 }}
               >
-                {this.state.username}
-                {"  "}
-                Log out
+                {`${this.state.username}  Log out`}
               </button>
             </form>
           ) : (
