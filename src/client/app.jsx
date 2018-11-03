@@ -66,6 +66,17 @@ class App extends Component {
               </Link>
             </li>
           </ul>
+          <form className="form-inline">
+            <button
+              className="btn btn-outline-light"
+              type="button"
+              onClick={() => {
+                this.isAuthenticated();
+              }}
+            >
+              {"User"}
+            </button>
+          </form>
           {this.state.username ? (
             <form className="form-inline">
               <button
