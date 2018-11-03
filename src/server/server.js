@@ -139,4 +139,5 @@ app.get("/logout", (req, res) => {
   res.status(204).send();
 });
 
-app.listen(3000, () => console.log("Listening on port 3000."));
+const port = 3000;
+app.listen(port, () => console.log(`Listening on port ${port}.`));
