@@ -10,12 +10,15 @@ class Home extends Component {
     this.state = {};
 
     Home.propTypes = {
-      userHandler: PropTypes.func.isRequired
+      userHandler: PropTypes.func.isRequired,
+      isLoggedIn: PropTypes.func.isRequired
     };
   }
 
   render() {
-    return (
+    return this.props.isLoggedIn() ? (
+      <div>Logged in!</div>
+    ) : (
       <div className="row">
         <Register className="col" userHandler={this.props.userHandler} />
         <Login className="col" userHandler={this.props.userHandler} />

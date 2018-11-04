@@ -12,9 +12,10 @@ class App extends Component {
     };
 
     this.handleUser = this.handleUser.bind(this);
+    this.isLoggedIn = this.isLoggedIn.bind(this);
   }
 
-  componentDidMount() {
+  componentWillMount() {
     this.isAuthenticated();
   }
 
@@ -27,16 +28,18 @@ class App extends Component {
         if (res.status === 401) {
           return null;
         }
-        throw new Error(`Network response was not ok. ${res.status}`);
+        throw new Error(`Network response was not ok. Status: ${res.status}`);
       })
       .then(user => this.handleUser(user ? user.username : null))
-      .catch(err =>
-        alert(`Something went wrong. Error: ${err} Status: ${err.status}`)
-      );
+      .catch(err => alert(`Something went wrong. Error: ${err}`));
   }
 
   handleUser(username) {
     this.setState({ username });
+  }
+
+  isLoggedIn() {
+    return !!this.state.username;
   }
 
   logout() {
@@ -101,7 +104,11 @@ class App extends Component {
               exact
               path="/"
               render={props => (
-                <Home {...props} userHandler={this.handleUser} />
+                <Home
+                  {...props}
+                  userHandler={this.handleUser}
+                  isLoggedIn={this.isLoggedIn}
+                />
               )}
             />
             <Route component={NotFound} />
