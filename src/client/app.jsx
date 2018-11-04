@@ -15,7 +15,7 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.isAuthenticated(); // TODO: Fix state being lost when refreshing. Related to username/id?
+    this.isAuthenticated();
   }
 
   isAuthenticated() {
