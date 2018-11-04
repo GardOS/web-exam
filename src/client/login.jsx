@@ -28,12 +28,19 @@ class Login extends Component {
       })
     })
       .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
         if (res.status === 400) {
           alert("Request is invalid");
         } else if (res.status === 401) {
           alert("Username/password is wrong");
-        } else {
-          this.props.userHandler(this.state.username);
+        }
+        return null;
+      })
+      .then(user => {
+        if (user) {
+          this.props.userHandler(user.username);
         }
       })
       .catch(err => alert(`Something went wrong. Error: ${err}`));

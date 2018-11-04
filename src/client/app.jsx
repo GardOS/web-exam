@@ -21,17 +21,18 @@ class App extends Component {
   isAuthenticated() {
     fetch("http://localhost:3000/user", { credentials: "include" })
       .then(res => {
-        if (res.status === 200) {
-          this.handleUser(res.body.username);
-        } else if (res.status === 401) {
-          this.handleUser(null);
-        } else {
-          alert(
-            `Something went wrong when authenticating. Status: ${res.status}`
-          );
+        if (res.ok) {
+          return res.json();
         }
+        if (res.status === 401) {
+          return null;
+        }
+        throw new Error(`Network response was not ok. ${res.status}`);
       })
-      .catch(err => alert(`Something went wrong. Error: ${err}`));
+      .then(user => this.handleUser(user ? user.username : null))
+      .catch(err =>
+        alert(`Something went wrong. Error: ${err} Status: ${err.status}`)
+      );
   }
 
   handleUser(username) {
@@ -39,7 +40,7 @@ class App extends Component {
   }
 
   logout() {
-    fetch("http://localhost:3000/logout")
+    fetch("http://localhost:3000/logout", { credentials: "include" })
       .then(res => {
         if (res.status === 204) {
           this.handleUser(null);
@@ -74,7 +75,7 @@ class App extends Component {
                 this.isAuthenticated();
               }}
             >
-              {"User"}
+              {`${this.state.username}`}
             </button>
           </form>
           {this.state.username ? (
@@ -86,7 +87,7 @@ class App extends Component {
                   this.logout();
                 }}
               >
-                {`${this.state.username}  Log out`}
+                {"Log out"}
               </button>
             </form>
           ) : (
