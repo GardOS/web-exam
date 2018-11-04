@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
-const User = require("./model");
+const { User } = require("./model");
 const userApi = require("./user-api");
 
 const app = express();
