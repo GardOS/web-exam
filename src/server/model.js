@@ -23,10 +23,18 @@ function connectWithRetry() {
 
 connectWithRetry();
 
+function sizeValidator(val) {
+  return val.length === 4;
+}
+
 const QuestionSchema = new Schema({
   questionText: { type: String, required: true },
-  answers: { type: [String], required: true }, // TODO: Size validation
-  correctAnswer: { type: Number, required: true, min: 0, max: 3 }
+  correctAnswer: { type: Number, required: true, min: 0, max: 3 },
+  answers: {
+    type: [String],
+    required: true,
+    validate: [sizeValidator, "Required amount of questions is: 4"]
+  }
 });
 
 const Quiz = mongoose.model("Quiz", {
