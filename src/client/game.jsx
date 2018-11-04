@@ -1,11 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+const io = require("socket.io-client");
+
 class Game extends Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = { lastMessage: null };
 
     Game.propTypes = {
       username: PropTypes.string
@@ -16,6 +18,16 @@ class Game extends Component {
     };
   }
 
+  startGameHandler() {
+    const socket = io.connect("http://localhost:3000");
+    console.log("Socket");
+
+    socket.on("message", message => {
+      this.setState({ lastMessage: message });
+      console.log("Connected!");
+    });
+  }
+
   render() {
     return (
       <div>
@@ -23,9 +35,11 @@ class Game extends Component {
         <button
           type="button"
           className="btn btn-block btn-primary align-middle"
+          onClick={() => this.startGameHandler()}
         >
           {"Start game"}
         </button>
+        <div>{`Last message: ${this.state.lastMessage}`}</div>
       </div>
     );
   }

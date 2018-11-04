@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
+const socketIo = require("socket.io");
 const { User } = require("./model");
 const userApi = require("./user-api");
 const quizApi = require("./quiz-api");
@@ -66,4 +67,12 @@ app.use(userApi);
 app.use(quizApi);
 
 const port = 3000;
-app.listen(port, () => console.log(`Listening on port ${port}.`));
+const httpServer = app.listen(port, () =>
+  console.log(`Listening on port ${port}.`)
+);
+
+const io = socketIo(httpServer);
+io.sockets.on("connection", socket => {
+  console.log("A client is connected!");
+  socket.emit("message", "message");
+});
