@@ -7,6 +7,7 @@ const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
 const { User } = require("./model");
 const userApi = require("./user-api");
+const quizApi = require("./quiz-api");
 
 const app = express();
 app.use(
@@ -62,6 +63,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(userApi);
+app.use(quizApi);
 
 const port = 3000;
 app.listen(port, () => console.log(`Listening on port ${port}.`));
