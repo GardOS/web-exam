@@ -14,4 +14,17 @@ router.get("/quizzes", (req, res) => {
   });
 });
 
+router.post("/quizzes", (req, res) => {
+  const body = req.body;
+  const quiz = new Quiz(body);
+
+  quiz.save((err, savedQuiz) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.send(savedQuiz);
+  });
+});
+
 module.exports = router;
