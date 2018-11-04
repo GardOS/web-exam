@@ -106,6 +106,7 @@ class App extends Component {
               render={props => (
                 <Home
                   {...props}
+                  username={this.state.username}
                   userHandler={this.handleUser}
                   isLoggedIn={this.isLoggedIn}
                 />
