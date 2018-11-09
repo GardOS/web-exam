@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Route, Switch, Link } from "react-router-dom";
 import Home from "./home";
+import Game from "./game";
 import { NotFound } from "./not-found";
 
 class App extends Component {
@@ -106,10 +107,16 @@ class App extends Component {
               render={props => (
                 <Home
                   {...props}
-                  username={this.state.username}
                   userHandler={this.handleUser}
                   isLoggedIn={this.isLoggedIn}
                 />
+              )}
+            />
+            <Route
+              exact
+              path="/game"
+              render={props => (
+                <Game {...props} username={this.state.username} />
               )}
             />
             <Route component={NotFound} />

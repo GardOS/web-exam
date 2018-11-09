@@ -53,6 +53,14 @@ class Game extends Component {
           className="btn btn-block btn-primary align-middle"
           onClick={() => this.sendMessage()}
         >
+          {"Join game"}
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-block btn-primary align-middle"
+          onClick={() => this.sendMessage()}
+        >
           {"Send message"}
         </button>
         <ul className="list-group-flush pl-0">
