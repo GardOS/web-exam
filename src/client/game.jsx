@@ -19,7 +19,8 @@ class Game extends Component {
   }
 
   startGameHandler() {
-    const socket = io.connect("http://localhost:3000");
+    const socket = io(window.location.origin);
+
     console.log("Socket");
 
     socket.on("message", message => {

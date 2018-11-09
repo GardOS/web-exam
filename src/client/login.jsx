@@ -16,9 +16,8 @@ class Login extends Component {
   }
 
   login() {
-    fetch("http://localhost:3000/login", {
+    fetch("/api/login", {
       method: "post",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },

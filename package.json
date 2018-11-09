@@ -3,19 +3,17 @@
   "version": "1.0.0",
   "main": "index.jsx",
   "scripts": {
-    "start": "npm run build && node src/server/server.js",
-    "build": "webpack --mode production",
+    "db": "docker-compose up -d",
+    "stop": "docker-compose down",
+    "prod": "npm run db && webpack --mode production && node src/server/server.js",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "client": "webpack-dev-server --mode development --hot",
     "server": "npm run db && nodemon src/server/server.js",
-    "db": "docker-compose up -d",
-    "stop": "docker-compose down",
     "test": "echo \"No tests\""
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
-    "cors": "^2.8.4",
     "express": "^4.16.4",
     "express-session": "^1.15.6",
     "mongoose": "^5.3.7",

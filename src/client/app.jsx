@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   isAuthenticated() {
-    fetch("http://localhost:3000/user", { credentials: "include" })
+    fetch("/api/user")
       .then(res => {
         if (res.ok) {
           return res.json();
@@ -43,7 +43,7 @@ class App extends Component {
   }
 
   logout() {
-    fetch("http://localhost:3000/logout", { credentials: "include" })
+    fetch("/api/logout")
       .then(res => {
         if (res.status === 204) {
           this.handleUser(null);
