@@ -27,8 +27,9 @@ class Register extends Component {
   }
 
   createUser() {
-    fetch("/api/users", {
+    fetch("http://localhost:3000/users", {
       method: "post",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },

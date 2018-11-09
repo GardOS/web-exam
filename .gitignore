@@ -3,4 +3,3 @@ node_modules/
 
 # production
 bundle.js
-bundle.js.map
