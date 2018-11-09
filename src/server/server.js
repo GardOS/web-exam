@@ -60,9 +60,9 @@ app.use(passport.session());
 app.use("/api", userApi);
 app.use("/api", quizApi);
 
-app.use(express.static("dist"));
+app.use(express.static("public"));
 app.use((req, res) => {
-  res.sendFile(path.resolve(__dirname, "..", "..", "dist", "index.html"));
+  res.sendFile(path.resolve(__dirname, "..", "..", "public", "index.html"));
 });
 
 const port = 8080;
