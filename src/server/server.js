@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
@@ -59,8 +60,10 @@ app.use(passport.session());
 app.use("/api", userApi);
 app.use("/api", quizApi);
 
-// needed to server static files, like HTML, CSS and JS.
 app.use(express.static("dist"));
+app.use((req, res) => {
+  res.sendFile(path.resolve(__dirname, "..", "..", "dist", "index.html"));
+});
 
 const port = 8080;
 const httpServer = app.listen(port, () =>
