@@ -116,7 +116,11 @@ class App extends Component {
               exact
               path="/game"
               render={props => (
-                <Game {...props} username={this.state.username} />
+                <Game
+                  {...props}
+                  username={this.state.username}
+                  isLoggedIn={this.isLoggedIn}
+                />
               )}
             />
             <Route component={NotFound} />

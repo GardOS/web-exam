@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
 const io = require("socket.io-client");
@@ -12,7 +13,8 @@ class Game extends Component {
     };
 
     Game.propTypes = {
-      username: PropTypes.string
+      username: PropTypes.string,
+      isLoggedIn: PropTypes.func.isRequired
     };
 
     Game.defaultProps = {
@@ -21,6 +23,10 @@ class Game extends Component {
   }
 
   componentWillMount() {
+    if (!this.props.isLoggedIn()) {
+      return;
+    }
+
     this.socket = io("http://localhost:3000");
 
     this.socket.on("connect", () => {
@@ -46,7 +52,7 @@ class Game extends Component {
   }
 
   render() {
-    return (
+    return this.props.isLoggedIn() ? (
       <div>
         <button
           type="button"
@@ -70,6 +76,15 @@ class Game extends Component {
             </li>
           ))}
         </ul>
+      </div>
+    ) : (
+      <div>
+        <h3>You have to log in before playing the game.</h3>
+        <h4>
+          <Link to="/">
+            <u>Login</u>
+          </Link>
+        </h4>
       </div>
     );
   }
