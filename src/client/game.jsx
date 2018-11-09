@@ -9,7 +9,7 @@ class Game extends Component {
     super();
 
     this.state = {
-      onlinePlayers: []
+      userSockets: new Map()
     };
 
     Game.propTypes = {
@@ -20,30 +20,59 @@ class Game extends Component {
     Game.defaultProps = {
       username: null
     };
+
+    this.socket = null;
   }
 
-  componentWillMount() {
-    if (!this.props.isLoggedIn()) {
-      return;
-    }
-
+  componentDidMount() {
     this.socket = io("http://localhost:3000");
 
     this.socket.on("connect", () => {
       console.log("Connected!");
-      this.socket.emit("userJoined", this.props.username);
     });
 
     this.socket.on("disconnect", () => {
       console.log("Disconnected!");
     });
 
-    this.socket.on("userJoined", message => {
-      console.log("userJoined!");
+    this.socket.on("errorEvent", message => {
+      alert(message.error);
+    });
+
+    this.socket.on("userSockets", message => {
       this.setState({
-        onlinePlayers: message
+        userSockets: message
       });
     });
+  }
+
+  componentWillUnmount() {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+  }
+
+  connect() {
+    fetch("http://localhost:3000/wstoken", {
+      method: "post",
+      credentials: "include"
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        if (res.status === 401) {
+          alert("You should log in first");
+        }
+        return null;
+      })
+      .then(message => {
+        if (message.wstoken) {
+          this.socket.emit("login", message.wstoken);
+          console.log(`Token: ${message.wstoken}`);
+        }
+      })
+      .catch(alert("Failed to connect to server"));
   }
 
   sendMessage() {
@@ -57,22 +86,14 @@ class Game extends Component {
         <button
           type="button"
           className="btn btn-block btn-primary align-middle"
-          onClick={() => this.sendMessage()}
+          onClick={() => this.connect()}
         >
-          {"Join game"}
-        </button>
-
-        <button
-          type="button"
-          className="btn btn-block btn-primary align-middle"
-          onClick={() => this.sendMessage()}
-        >
-          {"Send message"}
+          {"Connect"}
         </button>
         <ul className="list-group-flush pl-0">
-          {this.state.onlinePlayers.map((player, i) => (
-            <li key={player + i} className="list-group-item">
-              {player}
+          {this.state.userSockets.forEach((socket, user, map) => (
+            <li key={socket} className="list-group-item">
+              {`Key: ${socket}. Val: ${user}`}
             </li>
           ))}
         </ul>

@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const session = require("express-session");
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
@@ -72,7 +73,33 @@ const httpServer = app.listen(port, () =>
   console.log(`Listening on port ${port}.`)
 );
 
-const users = [];
+// Sockets
+
+const userSockets = new Map();
+const tokens = new Map();
+
+const createToken = userId => {
+  const token = crypto.randomBytes(10).toString("hex");
+  tokens.set(token, userId);
+  return token;
+};
+
+const consumeToken = token => {
+  const userId = tokens.get(token);
+  tokens.delete(token);
+  return userId;
+};
+
+app.post("/wstoken", (req, res) => {
+  if (!req.user) {
+    res.status(401).send();
+    return;
+  }
+
+  const token = createToken(req.user.username);
+
+  res.status(201).json({ wstoken: token });
+});
 
 const io = socketIo(httpServer);
 io.sockets.on("connection", socket => {
@@ -82,9 +109,25 @@ io.sockets.on("connection", socket => {
     console.log("A client disconnected!");
   });
 
-  socket.on("userJoined", data => {
-    console.log(`userJoined: ${data}`);
-    users.push(data);
-    io.sockets.emit("userJoined", users);
+  socket.on("login", token => {
+    if (token === null || token === undefined) {
+      socket.emit("errorEvent", { error: "No payload provided" });
+      return;
+    }
+
+    const userId = consumeToken(token);
+
+    if (!userId) {
+      socket.emit("errorEvent", { error: "Invalid token" });
+      return;
+    }
+
+    userSockets.set(socket, userId);
+    socket.emit("userSockets", userSockets);
+    console.log(`Socket: ${socket.id} User: ${userId}`);
+
+    userSockets.forEach((tempSocket, user, map) =>
+      console.log(`Socket: ${tempSocket} User: ${user}`)
+    );
   });
 });
