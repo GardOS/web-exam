@@ -7,7 +7,9 @@ class Game extends Component {
   constructor() {
     super();
 
-    this.state = { lastMessage: null };
+    this.state = {
+      onlinePlayers: []
+    };
 
     Game.propTypes = {
       username: PropTypes.string
@@ -18,28 +20,48 @@ class Game extends Component {
     };
   }
 
-  startGameHandler() {
-    const socket = io.connect("http://localhost:3000");
-    console.log("Socket");
+  componentWillMount() {
+    this.socket = io("http://localhost:3000");
 
-    socket.on("message", message => {
-      this.setState({ lastMessage: message });
+    this.socket.on("connect", () => {
       console.log("Connected!");
+      this.socket.emit("userJoined", this.props.username);
     });
+
+    this.socket.on("disconnect", () => {
+      console.log("Disconnected!");
+    });
+
+    this.socket.on("userJoined", message => {
+      console.log("userJoined!");
+      this.setState({
+        onlinePlayers: message
+      });
+    });
+  }
+
+  sendMessage() {
+    this.socket.emit("userJoined", this.props.username);
+    console.log(`Send message: userJoined, ${this.props.username}`);
   }
 
   render() {
     return (
       <div>
-        <h1 className="">{`Hello ${this.props.username}!`}</h1>
         <button
           type="button"
           className="btn btn-block btn-primary align-middle"
-          onClick={() => this.startGameHandler()}
+          onClick={() => this.sendMessage()}
         >
-          {"Start game"}
+          {"Send message"}
         </button>
-        <div>{`Last message: ${this.state.lastMessage}`}</div>
+        <ul className="list-group-flush pl-0">
+          {this.state.onlinePlayers.map((player, i) => (
+            <li key={player + i} className="list-group-item">
+              {player}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }

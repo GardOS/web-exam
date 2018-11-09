@@ -72,8 +72,19 @@ const httpServer = app.listen(port, () =>
   console.log(`Listening on port ${port}.`)
 );
 
+const users = [];
+
 const io = socketIo(httpServer);
 io.sockets.on("connection", socket => {
   console.log("A client is connected!");
-  socket.emit("message", "message");
+
+  socket.on("disconnect", () => {
+    console.log("A client disconnected!");
+  });
+
+  socket.on("userJoined", data => {
+    console.log(`userJoined: ${data}`);
+    users.push(data);
+    io.sockets.emit("userJoined", users);
+  });
 });
