@@ -5,6 +5,11 @@ const { createToken, consumeToken } = require("./ws-token");
 const wsApi = express.Router();
 const userSockets = new Map();
 
+const createQuestion = () => ({
+  questionText: "1+1?",
+  answers: ["Zero", "One", "Two", "Three"]
+});
+
 const createWsServer = httpServer => {
   const io = socketIo(httpServer);
   io.sockets.on("connection", socket => {
@@ -30,7 +35,15 @@ const createWsServer = httpServer => {
 
       userSockets.set(socket, userId);
     });
+
+    socket.on("start", () => {
+      console.log("question", createQuestion());
+      socket.emit("question", createQuestion());
+    });
+
+    socket.on("answer", () => {});
   });
+  return io;
 };
 
 wsApi.post("/wstoken", (req, res) => {

@@ -8,7 +8,10 @@ class Game extends Component {
   constructor() {
     super();
 
-    this.state = { connected: false };
+    this.state = {
+      connected: false,
+      currentQuestion: null
+    };
 
     Game.propTypes = {
       username: PropTypes.string,
@@ -28,7 +31,7 @@ class Game extends Component {
     }
   }
 
-  connect() {
+  createSocket() {
     this.socket = io("http://localhost:3000");
 
     this.socket.on("connect", () => {
@@ -43,6 +46,15 @@ class Game extends Component {
     this.socket.on("errorEvent", message => {
       alert(message.error);
     });
+
+    this.socket.on("question", question => {
+      this.setState({ currentQuestion: question });
+    });
+    this.socket.on("done", message => {});
+  }
+
+  connect() {
+    this.createSocket();
 
     fetch("http://localhost:3000/wstoken", {
       method: "post",
@@ -60,22 +72,22 @@ class Game extends Component {
       .then(message => {
         if (message && message.wstoken) {
           this.socket.emit("login", message.wstoken);
+          this.socket.emit("start");
           this.setState({ connected: true });
         }
       })
       .catch(err => alert(`Failed to connect to server. Error: ${err}`));
   }
 
-  sendMessage() {
-    this.socket.emit("userJoined", this.props.username);
-    console.log(`Send message: userJoined, ${this.props.username}`);
-  }
-
   render() {
     return this.props.isLoggedIn() ? (
       <div>
         {this.state.connected ? (
-          <div>Connected</div>
+          <div>
+            {this.state.currentQuestion
+              ? this.state.currentQuestion.questionText
+              : null}
+          </div>
         ) : (
           <button
             type="button"
