@@ -18,14 +18,17 @@ class Home extends Component {
 
   render() {
     return this.props.isLoggedIn() ? (
-      <Link to="/game">
-        <button
-          type="button"
-          className="btn btn-block btn-primary align-middle"
-        >
-          {"Join game"}
-        </button>
-      </Link>
+      <div>
+        <h1>Home</h1>
+        <Link to="/game">
+          <button
+            type="button"
+            className="btn btn-block btn-primary align-middle"
+          >
+            {"Join game"}
+          </button>
+        </Link>
+      </div>
     ) : (
       <div className="row">
         <Register className="col" userHandler={this.props.userHandler} />
