@@ -8,9 +8,7 @@ class Game extends Component {
   constructor() {
     super();
 
-    this.state = {
-      userSockets: new Map()
-    };
+    this.state = {};
 
     Game.propTypes = {
       username: PropTypes.string,
@@ -38,12 +36,6 @@ class Game extends Component {
     this.socket.on("errorEvent", message => {
       alert(message.error);
     });
-
-    this.socket.on("userSockets", message => {
-      this.setState({
-        userSockets: message
-      });
-    });
   }
 
   componentWillUnmount() {
@@ -67,12 +59,11 @@ class Game extends Component {
         return null;
       })
       .then(message => {
-        if (message.wstoken) {
+        if (message && message.wstoken) {
           this.socket.emit("login", message.wstoken);
-          console.log(`Token: ${message.wstoken}`);
         }
       })
-      .catch(alert("Failed to connect to server"));
+      .catch(err => alert(`Failed to connect to server. Error: ${err}`));
   }
 
   sendMessage() {
@@ -90,13 +81,6 @@ class Game extends Component {
         >
           {"Connect"}
         </button>
-        <ul className="list-group-flush pl-0">
-          {this.state.userSockets.forEach((socket, user, map) => (
-            <li key={socket} className="list-group-item">
-              {`Key: ${socket}. Val: ${user}`}
-            </li>
-          ))}
-        </ul>
       </div>
     ) : (
       <div>

@@ -1,4 +1,3 @@
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -74,7 +73,6 @@ const httpServer = app.listen(port, () =>
 );
 
 // Sockets
-
 const userSockets = new Map();
 const tokens = new Map();
 
@@ -107,6 +105,7 @@ io.sockets.on("connection", socket => {
 
   socket.on("disconnect", () => {
     console.log("A client disconnected!");
+    userSockets.delete(socket);
   });
 
   socket.on("login", token => {
@@ -123,11 +122,13 @@ io.sockets.on("connection", socket => {
     }
 
     userSockets.set(socket, userId);
-    socket.emit("userSockets", userSockets);
-    console.log(`Socket: ${socket.id} User: ${userId}`);
-
-    userSockets.forEach((tempSocket, user, map) =>
-      console.log(`Socket: ${tempSocket} User: ${user}`)
-    );
   });
+});
+
+app.get("/userSockets", (req, res) => {
+  const temp = [];
+  userSockets.forEach((value, key) => {
+    temp.push({ user: value, socket: key.id });
+  });
+  res.send(temp);
 });
