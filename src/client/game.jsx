@@ -8,7 +8,7 @@ class Game extends Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = { connected: false };
 
     Game.propTypes = {
       username: PropTypes.string,
@@ -22,22 +22,6 @@ class Game extends Component {
     this.socket = null;
   }
 
-  componentDidMount() {
-    this.socket = io("http://localhost:3000");
-
-    this.socket.on("connect", () => {
-      console.log("Connected!");
-    });
-
-    this.socket.on("disconnect", () => {
-      console.log("Disconnected!");
-    });
-
-    this.socket.on("errorEvent", message => {
-      alert(message.error);
-    });
-  }
-
   componentWillUnmount() {
     if (this.socket) {
       this.socket.disconnect();
@@ -45,6 +29,22 @@ class Game extends Component {
   }
 
   connect() {
+    this.socket = io("http://localhost:3000");
+
+    this.socket.on("connect", () => {
+      this.setState({ connected: true });
+      console.log("Connected!");
+    });
+
+    this.socket.on("disconnect", () => {
+      this.setState({ connected: false });
+      console.log("Disconnected!");
+    });
+
+    this.socket.on("errorEvent", message => {
+      alert(message.error);
+    });
+
     fetch("http://localhost:3000/wstoken", {
       method: "post",
       credentials: "include"
@@ -74,13 +74,17 @@ class Game extends Component {
   render() {
     return this.props.isLoggedIn() ? (
       <div>
-        <button
-          type="button"
-          className="btn btn-block btn-primary align-middle"
-          onClick={() => this.connect()}
-        >
-          {"Connect"}
-        </button>
+        {this.state.connected ? (
+          <div>Connected</div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-block btn-primary align-middle"
+            onClick={() => this.connect()}
+          >
+            {"Connect"}
+          </button>
+        )}
       </div>
     ) : (
       <div>
