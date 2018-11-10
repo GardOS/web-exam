@@ -32,7 +32,6 @@ class Game extends Component {
     this.socket = io("http://localhost:3000");
 
     this.socket.on("connect", () => {
-      this.setState({ connected: true });
       console.log("Connected!");
     });
 
@@ -61,6 +60,7 @@ class Game extends Component {
       .then(message => {
         if (message && message.wstoken) {
           this.socket.emit("login", message.wstoken);
+          this.setState({ connected: true });
         }
       })
       .catch(err => alert(`Failed to connect to server. Error: ${err}`));
