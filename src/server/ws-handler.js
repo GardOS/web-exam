@@ -1,14 +1,10 @@
 const express = require("express");
 const socketIo = require("socket.io");
 const { createToken, consumeToken } = require("./ws-token");
+const Match = require("./match");
 
 const wsApi = express.Router();
 const userSockets = new Map();
-
-const createQuestion = () => ({
-  questionText: "1+1?",
-  answers: ["Zero", "One", "Two", "Three"]
-});
 
 const createWsServer = httpServer => {
   const io = socketIo(httpServer);
@@ -36,12 +32,15 @@ const createWsServer = httpServer => {
       userSockets.set(socket, userId);
     });
 
+    let match;
     socket.on("start", () => {
-      console.log("question", createQuestion());
-      socket.emit("question", createQuestion());
+      match = new Match();
+      socket.emit("question", match.nextQuestion());
     });
 
-    socket.on("answer", () => {});
+    socket.on("answer", () => {
+      socket.emit("question", match.nextQuestion());
+    });
   });
   return io;
 };

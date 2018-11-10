@@ -50,7 +50,10 @@ class Game extends Component {
     this.socket.on("question", question => {
       this.setState({ currentQuestion: question });
     });
-    this.socket.on("done", message => {});
+
+    this.socket.on("done", message => {
+      alert("Done!");
+    });
   }
 
   connect() {
@@ -84,9 +87,18 @@ class Game extends Component {
       <div>
         {this.state.connected ? (
           <div>
-            {this.state.currentQuestion
-              ? this.state.currentQuestion.questionText
-              : null}
+            <div>
+              {this.state.currentQuestion
+                ? this.state.currentQuestion.questionText
+                : "No questions"}
+            </div>
+            <button
+              type="button"
+              className="btn btn-block btn-primary align-middle"
+              onClick={() => this.socket.emit("answer")}
+            >
+              {"Next"}
+            </button>
           </div>
         ) : (
           <button
