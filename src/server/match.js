@@ -17,6 +17,8 @@ class Match {
         correctAnswer: 3
       }
     ];
+
+    this.nextQuestion();
   }
 
   getPlayer(socket) {
@@ -58,7 +60,7 @@ class Match {
   }
 
   isMatchDone() {
-    return this.turn === this.questions.length - 1;
+    return this.turn === this.questions.length;
   }
 
   answerQuestion(socket, answer) {

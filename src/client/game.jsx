@@ -12,7 +12,8 @@ class Game extends Component {
     this.state = {
       connected: false,
       currentQuestion: null,
-      score: 0
+      results: null,
+      isGameDone: false
     };
 
     Game.propTypes = {
@@ -50,10 +51,10 @@ class Game extends Component {
       this.setState({ currentQuestion: question });
     });
 
-    this.socket.on("done", score => {
+    this.socket.on("done", results => {
       this.setState({ currentQuestion: null });
-      this.setState({ score });
-      console.log(`Done. Score: ${score}`);
+      this.setState({ results });
+      this.setState({ isGameDone: true });
     });
   }
 
@@ -85,36 +86,36 @@ class Game extends Component {
 
   handleAnswer(answer) {
     this.socket.emit("answer", answer);
+    this.setState({ currentQuestion: null });
+  }
+
+  renderGame() {
+    if (this.state.isGameDone) {
+      return <div>Score and stuff</div>;
+    }
+
+    return this.state.currentQuestion ? (
+      <Question
+        question={this.state.currentQuestion}
+        handleAnswer={this.handleAnswer}
+      />
+    ) : (
+      <div>Waiting for opponent</div>
+    );
   }
 
   render() {
     return this.props.isLoggedIn() ? (
       <div>
         {this.state.connected ? (
-          <div>
-            {this.state.currentQuestion ? (
-              <Question
-                question={this.state.currentQuestion}
-                handleAnswer={this.handleAnswer}
-              />
-            ) : (
-              <div>
-                <h2>{`Your score: ${this.state.score}`}</h2>
-                <h4>
-                  <Link to="/">
-                    <u>Play again?</u>
-                  </Link>
-                </h4>
-              </div>
-            )}
-          </div>
+          this.renderGame()
         ) : (
           <button
             type="button"
             className="btn btn-block btn-primary align-middle"
             onClick={() => this.connect()}
           >
-            {"Single player"}
+            {"Find match"}
           </button>
         )}
       </div>

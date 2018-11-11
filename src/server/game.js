@@ -14,7 +14,7 @@ function addPlayer(userId, socket) {
   players.push(player);
   socketConfig(socket);
   if (players.length > 1) {
-    match = new Match(players.shift, players.shift);
+    match = new Match(players.shift(), players.shift());
   }
 }
 
