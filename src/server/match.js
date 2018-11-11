@@ -2,6 +2,7 @@ class Match {
   constructor() {
     this.score = 0;
     this.turn = 0;
+    this.time = 10;
     this.questions = [
       {
         answers: ["Zero", "One", "Two", "Three"],
@@ -16,18 +17,38 @@ class Match {
     ];
   }
 
+  setTimer() {
+    this.time = 10;
+    const timer = setInterval(() => {
+      this.time -= 1;
+      if (this.time <= 0) clearInterval(timer);
+    }, 1000);
+  }
+
+  getTimeScore() {
+    if (this.time > 6) {
+      return 2;
+    }
+    if (this.time > 3) {
+      return 1;
+    }
+    return 0;
+  }
+
   answerQuestion(answer) {
     if (
       this.questions[this.turn - 1] &&
       answer === this.questions[this.turn - 1].correctAnswer
     ) {
-      this.score += 1;
+      const timeScore = this.getTimeScore();
+      this.score += 3 + timeScore;
     }
   }
 
   nextQuestion() {
     const question = this.questions[this.turn];
     this.turn += 1;
+    this.setTimer();
     return question;
   }
 
