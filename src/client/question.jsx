@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const Question = props => (
   <div>
-    <div>{props.question.questionText}</div>
+    <h2>{props.question.questionText}</h2>
     {props.question.answers.map((answer, i) => (
       <button
         key={answer}

@@ -38,12 +38,13 @@ const createWsServer = httpServer => {
       socket.emit("question", match.nextQuestion());
     });
 
-    socket.on("answer", () => {
+    socket.on("answer", answer => {
+      match.answerQuestion(answer);
       const question = match.nextQuestion();
       if (question) {
         socket.emit("question", question);
       } else {
-        socket.emit("done");
+        socket.emit("done", match.getScore());
       }
     });
   });

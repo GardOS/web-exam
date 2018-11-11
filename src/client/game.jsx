@@ -11,7 +11,8 @@ class Game extends Component {
 
     this.state = {
       connected: false,
-      currentQuestion: null
+      currentQuestion: null,
+      score: 0
     };
 
     Game.propTypes = {
@@ -54,9 +55,10 @@ class Game extends Component {
       this.setState({ currentQuestion: question });
     });
 
-    this.socket.on("done", () => {
+    this.socket.on("done", score => {
       this.setState({ currentQuestion: null });
-      console.log("Done");
+      this.setState({ score });
+      console.log(`Done. Score: ${score}`);
     });
   }
 
@@ -95,16 +97,21 @@ class Game extends Component {
       <div>
         {this.state.connected ? (
           <div>
-            <div>
-              {this.state.currentQuestion ? (
-                <Question
-                  question={this.state.currentQuestion}
-                  handleAnswer={this.handleAnswer}
-                />
-              ) : (
-                "No questions"
-              )}
-            </div>
+            {this.state.currentQuestion ? (
+              <Question
+                question={this.state.currentQuestion}
+                handleAnswer={this.handleAnswer}
+              />
+            ) : (
+              <div>
+                <h2>{`Your score: ${this.state.score}`}</h2>
+                <h4>
+                  <Link to="/">
+                    <u>Play again?</u>
+                  </Link>
+                </h4>
+              </div>
+            )}
           </div>
         ) : (
           <button
