@@ -1,7 +1,7 @@
 const express = require("express");
 const socketIo = require("socket.io");
 const { createToken, consumeToken } = require("./ws-token");
-const Match = require("./match");
+const Game = require("./game");
 
 const wsApi = express.Router();
 const userSockets = new Map();
@@ -13,7 +13,7 @@ const createWsServer = httpServer => {
 
     socket.on("disconnect", () => {
       console.log("A client disconnected!");
-      userSockets.delete(socket);
+      Game.removePlayer(socket);
     });
 
     socket.on("login", token => {
@@ -29,23 +29,9 @@ const createWsServer = httpServer => {
         return;
       }
 
-      userSockets.set(socket, userId);
-    });
+      Game.addPlayer(userId, socket);
 
-    let match;
-    socket.on("start", () => {
-      match = new Match();
-      socket.emit("question", match.nextQuestion());
-    });
-
-    socket.on("answer", answer => {
-      match.answerQuestion(answer);
-      const question = match.nextQuestion();
-      if (question) {
-        socket.emit("question", question);
-      } else {
-        socket.emit("done", match.getScore());
-      }
+      console.log(`${userId} logged in.`);
     });
   });
   return io;
