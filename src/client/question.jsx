@@ -6,32 +6,41 @@ class Question extends Component {
     super();
 
     this.state = {
-      timer: 10
+      time: 10
     };
 
     Question.propTypes = {
       question: PropTypes.object.isRequired,
       handleAnswer: PropTypes.func.isRequired
     };
+
+    this.timer = null;
   }
 
   componentDidMount() {
     this.setTimer();
   }
 
+  componentWillUnmount() {
+    clearInterval(this.timer);
+  }
+
   setTimer() {
-    this.setState({ timer: 10 });
-    const downloadTimer = setInterval(() => {
-      this.setState(prevState => ({ timer: prevState.timer - 1 }));
-      if (this.state.timer <= 0) clearInterval(downloadTimer);
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.setState({ time: 10 });
+    this.timer = setInterval(() => {
+      this.setState(prevState => ({ time: prevState.time - 1 }));
+      if (this.state.time <= 0) clearInterval(this.timer);
     }, 1000);
   }
 
   getProgressColor() {
-    if (this.state.timer > 6) {
+    if (this.state.time > 6) {
       return "bg-success";
     }
-    if (this.state.timer > 3) {
+    if (this.state.time > 3) {
       return "bg-warning";
     }
     return "bg-danger";
@@ -44,7 +53,7 @@ class Question extends Component {
           <div
             className={`progress-bar ${this.getProgressColor()}`}
             role="progressbar"
-            style={{ width: `${this.state.timer * 10}%` }}
+            style={{ width: `${this.state.time * 10}%` }}
             aria-valuenow="10"
             aria-valuemin="0"
             aria-valuemax="10"

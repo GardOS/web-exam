@@ -2,7 +2,8 @@ class Match {
   constructor() {
     this.score = 0;
     this.turn = 0;
-    this.time = 10;
+    this.time = 11;
+    this.timer = null;
     this.questions = [
       {
         answers: ["Zero", "One", "Two", "Three"],
@@ -18,10 +19,13 @@ class Match {
   }
 
   setTimer() {
-    this.time = 10;
-    const timer = setInterval(() => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    this.time = 11; // Add extra second as buffer
+    this.timer = setInterval(() => {
       this.time -= 1;
-      if (this.time <= 0) clearInterval(timer);
+      if (this.time <= 0) clearInterval(this.timer);
     }, 1000);
   }
 
