@@ -115,13 +115,7 @@ class App extends Component {
             <Route
               exact
               path="/game"
-              render={props => (
-                <Game
-                  {...props}
-                  username={this.state.username}
-                  isLoggedIn={this.isLoggedIn}
-                />
-              )}
+              render={props => <Game {...props} isLoggedIn={this.isLoggedIn} />}
             />
             <Route component={NotFound} />
           </Switch>

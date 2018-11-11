@@ -16,12 +16,7 @@ class Game extends Component {
     };
 
     Game.propTypes = {
-      username: PropTypes.string,
       isLoggedIn: PropTypes.func.isRequired
-    };
-
-    Game.defaultProps = {
-      username: null
     };
 
     this.socket = null;
