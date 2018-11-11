@@ -93,6 +93,8 @@ class Match {
     this.setTimer();
     this.playerOne.socket.emit("question", question);
     this.playerTwo.socket.emit("question", question);
+    this.playerOne.hasAnswered = false;
+    this.playerTwo.hasAnswered = false;
   }
 
   getResults() {
