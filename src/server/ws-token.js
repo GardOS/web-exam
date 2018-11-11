@@ -2,16 +2,16 @@ const crypto = require("crypto");
 
 const tokens = new Map();
 
-const createToken = userId => {
+const createToken = username => {
   const token = crypto.randomBytes(10).toString("hex");
-  tokens.set(token, userId);
+  tokens.set(token, username);
   return token;
 };
 
 const consumeToken = token => {
-  const userId = tokens.get(token);
+  const username = tokens.get(token);
   tokens.delete(token);
-  return userId;
+  return username;
 };
 
 module.exports = { createToken, consumeToken };

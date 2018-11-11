@@ -22,16 +22,16 @@ const createWsServer = httpServer => {
         return;
       }
 
-      const userId = consumeToken(token);
+      const username = consumeToken(token);
 
-      if (!userId) {
+      if (!username) {
         socket.emit("errorEvent", { error: "Invalid token" });
         return;
       }
 
-      Game.addPlayer(userId, socket);
+      Game.addPlayer(username, socket);
 
-      console.log(`${userId} logged in.`);
+      console.log(`${username} logged in.`);
     });
   });
   return io;

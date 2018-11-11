@@ -97,8 +97,8 @@ class Match {
 
   getResults() {
     return {
-      playerOne: { name: this.playerOne.userId, score: this.playerOne.score },
-      playerTwo: { name: this.playerTwo.userId, score: this.playerTwo.score }
+      playerOne: { name: this.playerOne.username, score: this.playerOne.score },
+      playerTwo: { name: this.playerTwo.username, score: this.playerTwo.score }
     };
   }
 }

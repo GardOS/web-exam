@@ -9,8 +9,8 @@ function socketConfig(socket) {
   });
 }
 
-function addPlayer(userId, socket) {
-  const player = { userId, socket, score: 0, hasAnswered: false };
+function addPlayer(username, socket) {
+  const player = { username, socket, score: 0, hasAnswered: false };
   players.push(player);
   socketConfig(socket);
   if (players.length > 1) {
