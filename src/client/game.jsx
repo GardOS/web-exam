@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Question from "./question";
+import Results from "./results";
 
 const io = require("socket.io-client");
 
@@ -52,8 +53,8 @@ class Game extends Component {
     });
 
     this.socket.on("done", results => {
-      this.setState({ currentQuestion: null });
       this.setState({ results });
+      this.setState({ currentQuestion: null });
       this.setState({ isGameDone: true });
     });
   }
@@ -91,7 +92,7 @@ class Game extends Component {
 
   renderGame() {
     if (this.state.isGameDone) {
-      return <div>Score and stuff</div>;
+      return <Results results={this.state.results} />;
     }
 
     return this.state.currentQuestion ? (

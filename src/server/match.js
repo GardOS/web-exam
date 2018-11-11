@@ -99,8 +99,14 @@ class Match {
 
   getResults() {
     return {
-      playerOne: { name: this.playerOne.username, score: this.playerOne.score },
-      playerTwo: { name: this.playerTwo.username, score: this.playerTwo.score }
+      playerOne: {
+        username: this.playerOne.username,
+        score: this.playerOne.score
+      },
+      playerTwo: {
+        username: this.playerTwo.username,
+        score: this.playerTwo.score
+      }
     };
   }
 }
