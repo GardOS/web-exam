@@ -8,8 +8,8 @@ class Match {
         correctAnswer: 2
       },
       {
-        answers: ["Zero", "One", "Two", "Three"],
-        questionText: "1+2?",
+        answers: ["Two", "Four", "Six", "Eight"],
+        questionText: "4+4?",
         correctAnswer: 3
       }
     ];

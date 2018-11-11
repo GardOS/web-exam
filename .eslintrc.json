@@ -13,6 +13,7 @@
     "no-console": "off",
     "no-alert": "off",
     "prefer-destructuring": "off",
-    "linebreak-style": ["error", "windows"]
+    "linebreak-style": ["error", "windows"],
+    "react/forbid-prop-types": 0
   }
 }

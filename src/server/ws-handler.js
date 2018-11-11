@@ -39,7 +39,12 @@ const createWsServer = httpServer => {
     });
 
     socket.on("answer", () => {
-      socket.emit("question", match.nextQuestion());
+      const question = match.nextQuestion();
+      if (question) {
+        socket.emit("question", question);
+      } else {
+        socket.emit("done");
+      }
     });
   });
   return io;

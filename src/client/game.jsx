@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import Question from "./question";
 
 const io = require("socket.io-client");
 
@@ -23,6 +24,8 @@ class Game extends Component {
     };
 
     this.socket = null;
+
+    this.handleAnswer = this.handleAnswer.bind(this);
   }
 
   componentWillUnmount() {
@@ -51,8 +54,9 @@ class Game extends Component {
       this.setState({ currentQuestion: question });
     });
 
-    this.socket.on("done", message => {
-      alert("Done!");
+    this.socket.on("done", () => {
+      this.setState({ currentQuestion: null });
+      console.log("Done");
     });
   }
 
@@ -82,23 +86,25 @@ class Game extends Component {
       .catch(err => alert(`Failed to connect to server. Error: ${err}`));
   }
 
+  handleAnswer(answer) {
+    this.socket.emit("answer", answer);
+  }
+
   render() {
     return this.props.isLoggedIn() ? (
       <div>
         {this.state.connected ? (
           <div>
             <div>
-              {this.state.currentQuestion
-                ? this.state.currentQuestion.questionText
-                : "No questions"}
+              {this.state.currentQuestion ? (
+                <Question
+                  question={this.state.currentQuestion}
+                  handleAnswer={this.handleAnswer}
+                />
+              ) : (
+                "No questions"
+              )}
             </div>
-            <button
-              type="button"
-              className="btn btn-block btn-primary align-middle"
-              onClick={() => this.socket.emit("answer")}
-            >
-              {"Next"}
-            </button>
           </div>
         ) : (
           <button
@@ -106,7 +112,7 @@ class Game extends Component {
             className="btn btn-block btn-primary align-middle"
             onClick={() => this.connect()}
           >
-            {"Connect"}
+            {"Single player"}
           </button>
         )}
       </div>
