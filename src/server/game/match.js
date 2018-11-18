@@ -1,22 +1,11 @@
 class Match {
-  constructor(host) {
+  constructor(host, questions) {
     this.host = host;
     this.players = null;
     this.turn = 0;
     this.time = 11;
     this.timer = null;
-    this.questions = [
-      {
-        answers: ["Zero", "One", "Two", "Three"],
-        questionText: "1+1?",
-        correctAnswer: 2
-      },
-      {
-        answers: ["Two", "Four", "Six", "Eight"],
-        questionText: "4+4?",
-        correctAnswer: 3
-      }
-    ];
+    this.questions = questions;
   }
 
   getPlayer(socket) {

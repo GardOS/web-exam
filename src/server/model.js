@@ -38,11 +38,6 @@ const QuestionSchema = new Schema({
 });
 
 const Quiz = mongoose.model("Quiz", {
-  state: {
-    type: String,
-    required: true,
-    enum: ["Not started", "In progress", "Done"]
-  },
   questions: { type: [QuestionSchema], required: true }
 });
 

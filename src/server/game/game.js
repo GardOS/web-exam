@@ -1,4 +1,5 @@
 const Match = require("./match");
+const { Quiz } = require("../model");
 
 const waitingPlayers = [];
 const matches = [];
@@ -12,10 +13,29 @@ function findMatch(socket) {
   return matches.find(m => m.getPlayer(socket).socket === socket);
 }
 
+// https://stackoverflow.com/a/39297234
 function createMatch(socket) {
   if (newMatch === null) {
-    newMatch = new Match(socket);
-    socket.emit("gameCreated");
+    Quiz.countDocuments().exec((countErr, count) => {
+      if (countErr) {
+        this.messagePlayers("errorEvent", {
+          error: "Error when finding quiz"
+        });
+      }
+      const random = Math.floor(Math.random() * count);
+
+      Quiz.findOne()
+        .skip(random)
+        .exec((findErr, result) => {
+          if (findErr || !result) {
+            this.messagePlayers("errorEvent", {
+              error: "Error when finding quiz"
+            });
+          }
+          newMatch = new Match(socket, result.questions);
+          socket.emit("gameCreated");
+        });
+    });
   }
 }
 
