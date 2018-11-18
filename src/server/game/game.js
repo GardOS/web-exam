@@ -10,7 +10,13 @@ function isNewMatch() {
 }
 
 function findMatch(socket) {
-  return matches.find(m => m.getPlayer(socket).socket === socket);
+  return matches.find(m => {
+    const player = m.getPlayer(socket);
+    if (player) {
+      return player.socket === socket;
+    }
+    return false;
+  });
 }
 
 // https://stackoverflow.com/a/39297234
