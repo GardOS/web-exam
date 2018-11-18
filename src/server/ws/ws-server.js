@@ -1,9 +1,7 @@
-const express = require("express");
 const socketIo = require("socket.io");
-const { createToken, consumeToken } = require("./ws-token");
-const Game = require("./game");
+const { consumeToken } = require("./ws-token");
+const Game = require("../game/game");
 
-const wsApi = express.Router();
 const userSockets = new Map();
 
 const createWsServer = httpServer => {
@@ -53,23 +51,4 @@ const createWsServer = httpServer => {
   return io;
 };
 
-wsApi.post("/wstoken", (req, res) => {
-  if (!req.user) {
-    res.status(401).send();
-    return;
-  }
-
-  const token = createToken(req.user.username);
-
-  res.status(201).json({ wstoken: token });
-});
-
-wsApi.get("/userSockets", (req, res) => {
-  const temp = [];
-  userSockets.forEach((value, key) => {
-    temp.push({ user: value, socket: key.id });
-  });
-  res.send(temp);
-});
-
-module.exports = { wsApi, createWsServer };
+module.exports = { createWsServer };

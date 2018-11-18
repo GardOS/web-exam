@@ -1,7 +1,8 @@
 const express = require("express");
 const passport = require("passport");
 const bcrypt = require("bcryptjs");
-const { User } = require("./model");
+const { User } = require("../model");
+const { createToken } = require("../ws/ws-token");
 
 const router = express.Router();
 
@@ -82,6 +83,17 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 router.get("/logout", (req, res) => {
   req.logout();
   res.status(204).send();
+});
+
+router.post("/wstoken", (req, res) => {
+  if (!req.user) {
+    res.status(401).send();
+    return;
+  }
+
+  const token = createToken(req.user.username);
+
+  res.status(201).json({ wstoken: token });
 });
 
 module.exports = router;

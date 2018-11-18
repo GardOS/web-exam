@@ -6,9 +6,9 @@ const session = require("express-session");
 const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
 const { User } = require("./model");
-const { wsApi, createWsServer } = require("./ws-handler");
-const userApi = require("./user-api");
-const quizApi = require("./quiz-api");
+const { createWsServer } = require("./ws/ws-server");
+const userApi = require("./api/auth-api");
+const quizApi = require("./api/quiz-api");
 
 const app = express();
 app.use(
@@ -65,7 +65,6 @@ app.use(passport.session());
 
 app.use(userApi);
 app.use(quizApi);
-app.use(wsApi);
 
 const port = 3000;
 const httpServer = app.listen(port, () =>
