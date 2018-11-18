@@ -60,12 +60,11 @@ class Quiz extends Component {
 
   renderAnswers() {
     return [...Array(4)].map((v, i) => (
-      <div className="form-row">
+      <div className="form-row" key={`row-${i}`}>
         <label className="w-100 col" htmlFor={`answer-${i}`}>
           <input
             required
             id={`answer-${i}`}
-            key={`answer-${v}`}
             type="text"
             className="form-control"
             placeholder={`Answer ${i + 1}`}
