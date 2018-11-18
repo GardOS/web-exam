@@ -27,17 +27,24 @@ const NavBar = props => (
       </li>
     </ul>
     {props.username ? (
-      <form className="form-inline">
-        <button
-          className="btn btn-outline-light"
-          type="button"
-          onClick={() => {
-            props.logoutHandler();
-          }}
-        >
-          {"Log out"}
-        </button>
-      </form>
+      <ul className="navbar-nav">
+        <li className="nav-item">
+          <span className="navbar-brand text-light">{props.username}</span>
+        </li>
+        <li className="nav-item">
+          <form className="form-inline">
+            <button
+              className="btn btn-outline-light"
+              type="button"
+              onClick={() => {
+                props.logoutHandler();
+              }}
+            >
+              {"Log out"}
+            </button>
+          </form>
+        </li>
+      </ul>
     ) : (
       <span className="navbar-brand text-light">Not logged in</span>
     )}
