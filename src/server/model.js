@@ -23,8 +23,12 @@ function connectWithRetry() {
 
 connectWithRetry();
 
-function sizeValidator(val) {
+function answerValidator(val) {
   return val.length === 4;
+}
+
+function questionValidator(val) {
+  return val.length > 0;
 }
 
 const QuestionSchema = new Schema({
@@ -33,12 +37,16 @@ const QuestionSchema = new Schema({
   answers: {
     type: [String],
     required: true,
-    validate: [sizeValidator, "Required amount of questions is: 4"]
+    validate: [answerValidator, "Required amount of answers is: 4"]
   }
 });
 
 const Quiz = mongoose.model("Quiz", {
-  questions: { type: [QuestionSchema], required: true }
+  questions: {
+    type: [QuestionSchema],
+    required: true,
+    validate: [questionValidator, "Required amount of questions is minimum: 1"]
+  }
 });
 
 const User = mongoose.model("User", {

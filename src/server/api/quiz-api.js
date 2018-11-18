@@ -30,6 +30,11 @@ router.post("/quizzes", (req, res) => {
   const body = req.body;
   const quiz = new Quiz(body);
 
+  if (quiz.questions.length < 1) {
+    res.status(400).send("Too few questions");
+    return;
+  }
+
   quiz.save((err, savedQuiz) => {
     if (err) {
       res.status(500).send(err);
@@ -41,7 +46,7 @@ router.post("/quizzes", (req, res) => {
 
 router.delete("/quizzes/:id", (req, res) => {
   const id = req.params.id;
-  Quiz.findByIdAndRemove(id, (err, quiz) => {
+  Quiz.findOneAndDelete(id, (err, quiz) => {
     if (err) {
       res.status(500).send(err);
       return;
