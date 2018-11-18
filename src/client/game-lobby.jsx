@@ -15,16 +15,20 @@ const GameLobby = props => (
           {"Start game"}
         </button>
       ) : (
-        <div>Waiting for more players</div>
+        <h3>Waiting for more players</h3>
       )
     ) : (
-      <div>Waiting for host</div>
+      <h3>Waiting for host</h3>
     )}
-
-    <div>Players:</div>
-    {props.players.map(player => (
-      <div key={player}>{player}</div>
-    ))}
+    <br />
+    <h2>Players:</h2>
+    <ol className="list-group-flush pl-0">
+      {props.players.map(player => (
+        <li key={player} className="list-group-item">
+          {player}
+        </li>
+      ))}
+    </ol>
   </div>
 );
 
