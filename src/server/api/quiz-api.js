@@ -39,4 +39,21 @@ router.post("/quizzes", (req, res) => {
   });
 });
 
+router.delete("/quizzes/:id", (req, res) => {
+  const id = req.params.id;
+  Quiz.findByIdAndRemove(id, (err, quiz) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+
+    if (!quiz) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.sendStatus(204);
+  });
+});
+
 module.exports = router;

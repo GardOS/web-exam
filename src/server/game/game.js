@@ -21,6 +21,7 @@ function createMatch(socket) {
         this.messagePlayers("errorEvent", {
           error: "Error when finding quiz"
         });
+        return;
       }
       const random = Math.floor(Math.random() * count);
 
@@ -31,6 +32,7 @@ function createMatch(socket) {
             this.messagePlayers("errorEvent", {
               error: "Error when finding quiz"
             });
+            return;
           }
           newMatch = new Match(socket, result.questions);
           socket.emit("gameCreated");
