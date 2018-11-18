@@ -4,6 +4,10 @@ const waitingPlayers = [];
 const matches = [];
 let newMatch = null;
 
+function isNewMatch() {
+  return !!newMatch;
+}
+
 function findMatch(socket) {
   return matches.find(m => m.getPlayer(socket).socket === socket);
 }
@@ -70,5 +74,6 @@ module.exports = {
   startMatch,
   addPlayer,
   removePlayer,
-  answerQuestion
+  answerQuestion,
+  isNewMatch
 };

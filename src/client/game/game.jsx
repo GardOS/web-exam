@@ -14,11 +14,11 @@ class Game extends Component {
     this.gameStateEnum = Object.freeze({ new: 0, inProgress: 1, done: 2 });
 
     this.state = {
+      gameState: this.gameStateEnum.new,
       isPlaying: false,
+      isHost: false,
       currentQuestion: null,
       results: [],
-      isHost: false,
-      gameState: this.gameStateEnum.new,
       players: []
     };
 
@@ -95,7 +95,6 @@ class Game extends Component {
     });
 
     this.socket.on("gameStarted", () => {
-      this.setState({ isHost: true });
       this.setState({ gameState: this.gameStateEnum.inProgress });
     });
   }
@@ -146,19 +145,10 @@ class Game extends Component {
               type="button"
               className="btn btn-block btn-primary align-middle"
               onClick={() => {
-                this.socket.emit("create");
+                this.socket.emit("newPlayer");
               }}
             >
-              {"Create game"}
-            </button>
-            <button
-              type="button"
-              className="btn btn-block btn-primary align-middle"
-              onClick={() => {
-                this.socket.emit("join");
-              }}
-            >
-              {"Join game"}
+              {"Create/join game"}
             </button>
           </div>
         )}

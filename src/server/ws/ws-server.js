@@ -28,17 +28,15 @@ const createWsServer = httpServer => {
 
       userSockets.set(socket, username);
 
-      socket.on("create", () => {
-        Game.createMatch(socket);
+      socket.on("newPlayer", () => {
+        if (!Game.isNewMatch()) {
+          Game.createMatch(socket);
+        }
         Game.addPlayer(socket, userSockets.get(socket));
       });
 
       socket.on("start", () => {
         Game.startMatch(socket);
-      });
-
-      socket.on("join", () => {
-        Game.addPlayer(socket, userSockets.get(socket));
       });
 
       socket.on("answer", answer => {
