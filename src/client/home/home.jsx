@@ -28,6 +28,15 @@ class Home extends Component {
             {"Start playing"}
           </button>
         </Link>
+        <br />
+        <Link to="/quiz">
+          <button
+            type="button"
+            className="btn btn-block btn-primary align-middle"
+          >
+            {"Create quiz"}
+          </button>
+        </Link>
       </div>
     ) : (
       <div className="row">

@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { Route, Switch } from "react-router-dom";
 import Home from "./home/home";
 import Game from "./game/game";
+import Quiz from "./quiz/quiz";
+
 import { NotFound } from "./not-found";
 import NavBar from "./nav-bar";
 
@@ -82,6 +84,11 @@ class App extends Component {
               exact
               path="/game"
               render={props => <Game {...props} isLoggedIn={this.isLoggedIn} />}
+            />
+            <Route
+              exact
+              path="/quiz"
+              render={props => <Quiz {...props} isLoggedIn={this.isLoggedIn} />}
             />
             <Route component={NotFound} />
           </Switch>

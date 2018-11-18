@@ -16,12 +16,16 @@ const NavBar = props => (
         </Link>
       </li>
       <li className="nav-item">
+        <Link to="/quiz" className="text-light nav-link">
+          {"Quiz"}
+        </Link>
+      </li>
+      <li className="nav-item">
         <Link to="/NotAPage" className="text-light nav-link">
           {"404"}
         </Link>
       </li>
     </ul>
-    <span className="navbar-brand text-light">{props.username}</span>
     {props.username ? (
       <form className="form-inline">
         <button
