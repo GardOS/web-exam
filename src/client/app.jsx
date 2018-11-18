@@ -3,6 +3,7 @@ import { Route, Switch, Link } from "react-router-dom";
 import Home from "./home";
 import Game from "./game";
 import { NotFound } from "./not-found";
+import NavBar from "./nav-bar";
 
 class App extends Component {
   constructor() {
@@ -14,6 +15,7 @@ class App extends Component {
 
     this.handleUser = this.handleUser.bind(this);
     this.isLoggedIn = this.isLoggedIn.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   componentWillMount() {
@@ -43,7 +45,7 @@ class App extends Component {
     return !!this.state.username;
   }
 
-  logout() {
+  handleLogout() {
     fetch("http://localhost:3000/logout", { credentials: "include" })
       .then(res => {
         if (res.status === 204) {
@@ -58,46 +60,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <nav className="navbar navbar-expand-sm bg-info sticky-top justify-content-between">
-          <ul className="navbar-nav">
-            <li className="nav-item">
-              <Link to="/" className="text-light nav-link">
-                {"Home"}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to="/NotAPage" className="text-light nav-link">
-                {"404"}
-              </Link>
-            </li>
-          </ul>
-          <form className="form-inline">
-            <button
-              className="btn btn-outline-light"
-              type="button"
-              onClick={() => {
-                this.isAuthenticated();
-              }}
-            >
-              {`${this.state.username}`}
-            </button>
-          </form>
-          {this.state.username ? (
-            <form className="form-inline">
-              <button
-                className="btn btn-outline-light"
-                type="button"
-                onClick={() => {
-                  this.logout();
-                }}
-              >
-                {"Log out"}
-              </button>
-            </form>
-          ) : (
-            <span className="navbar-brand text-light">Not logged in</span>
-          )}
-        </nav>
+        <NavBar
+          username={this.state.username}
+          logoutHandler={this.handleLogout}
+        />
         <br />
         <div className="container">
           <Switch>
