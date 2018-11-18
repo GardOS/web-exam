@@ -39,18 +39,21 @@ class Match {
     this.time = 11; // Add extra second as buffer
     this.timer = setInterval(() => {
       this.time -= 1;
-      if (this.time <= 0) clearInterval(this.timer);
+      if (this.time <= 0) {
+        clearInterval(this.timer);
+        this.players.forEach(player => {
+          player.hasAnswered = true;
+        });
+        this.nextQuestion();
+      }
     }, 1000);
   }
 
   getTimeScore() {
     if (this.time > 6) {
-      return 3;
-    }
-    if (this.time > 3) {
       return 2;
     }
-    if (this.time > 0) {
+    if (this.time > 3) {
       return 1;
     }
     return 0;

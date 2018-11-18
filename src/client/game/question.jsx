@@ -21,6 +21,12 @@ class Question extends Component {
     this.setTimer();
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.question !== prevProps.question) {
+      this.setTimer();
+    }
+  }
+
   componentWillUnmount() {
     clearInterval(this.timer);
   }
