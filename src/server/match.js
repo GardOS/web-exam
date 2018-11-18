@@ -108,10 +108,11 @@ class Match {
   }
 
   getResults() {
-    return this.players.map(player => ({
+    const score = this.players.map(player => ({
       username: player.username,
       score: player.score
     }));
+    return score.sort((a, b) => b.score - a.score);
   }
 }
 

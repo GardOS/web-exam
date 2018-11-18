@@ -25,7 +25,7 @@ class Home extends Component {
             type="button"
             className="btn btn-block btn-primary align-middle"
           >
-            {"Join game"}
+            {"Start playing"}
           </button>
         </Link>
       </div>

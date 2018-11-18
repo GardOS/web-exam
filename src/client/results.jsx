@@ -5,12 +5,17 @@ import PropTypes from "prop-types";
 const Results = props =>
   props.results ? (
     <div>
-      {props.results.map(player => (
-        <h2>{`${player.username}: ${player.score}`}</h2>
-      ))}
+      <h1>Score</h1>
+      <ol className="list-group-flush pl-0">
+        {props.results.map(player => (
+          <li key={player.username} className="list-group-item">
+            {`${player.username}: ${player.score}`}
+          </li>
+        ))}
+      </ol>
       <h4>
         <Link to="/">
-          <u>Click here to play more</u>
+          <u>Go back</u>
         </Link>
       </h4>
     </div>
