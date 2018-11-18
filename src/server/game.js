@@ -39,9 +39,11 @@ function answerQuestion(socket, answer) {
 function addPlayer(socket, username) {
   const player = { username, socket, score: 0, hasAnswered: false };
   waitingPlayers.push(player);
-  socket.emit("playerJoined");
 
-  // Emit new player
+  const usernames = waitingPlayers.map(p => p.username);
+  waitingPlayers.map(waitingPlayer =>
+    waitingPlayer.socket.emit("playerJoined", usernames)
+  );
 }
 
 function removePlayer(socket) {

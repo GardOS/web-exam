@@ -9,8 +9,6 @@ const userSockets = new Map();
 const createWsServer = httpServer => {
   const io = socketIo(httpServer);
   io.sockets.on("connection", socket => {
-    console.log("A client is connected!");
-
     socket.on("disconnect", () => {
       console.log("A client disconnected!");
       Game.removePlayer(socket);

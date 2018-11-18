@@ -17,7 +17,8 @@ class Game extends Component {
       currentQuestion: null,
       results: [],
       isHost: false,
-      gameState: this.gameStateEnum.new
+      gameState: this.gameStateEnum.new,
+      players: []
     };
 
     Game.propTypes = {
@@ -82,8 +83,9 @@ class Game extends Component {
       this.setState({ gameState: this.gameStateEnum.done });
     });
 
-    this.socket.on("playerJoined", () => {
+    this.socket.on("playerJoined", players => {
       this.setState({ isPlaying: true });
+      this.setState({ players });
     });
 
     this.socket.on("gameCreated", () => {
@@ -105,17 +107,29 @@ class Game extends Component {
     switch (this.state.gameState) {
       case this.gameStateEnum.new:
         return this.state.isHost ? (
-          <button
-            type="button"
-            className="btn btn-block btn-primary align-middle"
-            onClick={() => {
-              this.socket.emit("start");
-            }}
-          >
-            {"Start game"}
-          </button>
+          <div>
+            <button
+              type="button"
+              className="btn btn-block btn-primary align-middle"
+              onClick={() => {
+                this.socket.emit("start");
+              }}
+            >
+              {"Start game"}
+            </button>
+            <div>Players:</div>
+            {this.state.players.map(player => (
+              <div>{player}</div>
+            ))}
+          </div>
         ) : (
-          <div>Waiting for host</div>
+          <div>
+            <div>Waiting for host</div>
+            <div>Players:</div>
+            {this.state.players.map(player => (
+              <div>{player}</div>
+            ))}
+          </div>
         );
       case this.gameStateEnum.inProgress:
         return this.state.currentQuestion ? (
