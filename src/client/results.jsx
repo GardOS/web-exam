@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Results = message =>
-  message ? (
+const Results = props =>
+  props.results ? (
     <div>
-      {console.log(message)}
-      {message.results.map(player => (
+      {console.log(props)}
+      {props.results.map(player => (
         <h2>{`${player.username}: ${player.score}`}</h2>
       ))}
       <h4>
@@ -17,5 +18,9 @@ const Results = message =>
   ) : (
     <h1>No results</h1>
   );
+
+Results.propTypes = {
+  results: PropTypes.array.isRequired
+};
 
 export default Results;

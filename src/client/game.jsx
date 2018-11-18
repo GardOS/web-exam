@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Question from "./question";
 import Results from "./results";
+import GameLobby from "./game-lobby";
 
 const io = require("socket.io-client");
 
@@ -28,6 +29,7 @@ class Game extends Component {
     this.socket = null;
 
     this.handleAnswer = this.handleAnswer.bind(this);
+    this.handleStart = this.handleStart.bind(this);
   }
 
   componentDidMount() {
@@ -103,33 +105,19 @@ class Game extends Component {
     this.setState({ currentQuestion: null });
   }
 
+  handleStart() {
+    this.socket.emit("start");
+  }
+
   renderGame() {
     switch (this.state.gameState) {
       case this.gameStateEnum.new:
-        return this.state.isHost ? (
-          <div>
-            <button
-              type="button"
-              className="btn btn-block btn-primary align-middle"
-              onClick={() => {
-                this.socket.emit("start");
-              }}
-            >
-              {"Start game"}
-            </button>
-            <div>Players:</div>
-            {this.state.players.map(player => (
-              <div>{player}</div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            <div>Waiting for host</div>
-            <div>Players:</div>
-            {this.state.players.map(player => (
-              <div>{player}</div>
-            ))}
-          </div>
+        return (
+          <GameLobby
+            isHost={this.state.isHost}
+            players={this.state.players}
+            handleStart={this.handleStart}
+          />
         );
       case this.gameStateEnum.inProgress:
         return this.state.currentQuestion ? (
