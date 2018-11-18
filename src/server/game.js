@@ -26,13 +26,8 @@ function startMatch(socket) {
 function answerQuestion(socket, answer) {
   const match = findMatch(socket);
   match.answerQuestion(socket, answer);
-  if (match.isTurnComplete()) {
-    if (match.isMatchDone()) {
-      match.messagePlayers("done", match.getResults());
-      matches.splice(matches.indexOf(match), 1);
-    } else {
-      match.nextQuestion();
-    }
+  if (match.isMatchDone()) {
+    matches.splice(matches.indexOf(match), 1);
   }
 }
 
@@ -42,13 +37,32 @@ function addPlayer(socket, username) {
 
   const usernames = waitingPlayers.map(p => p.username);
   waitingPlayers.map(waitingPlayer =>
-    waitingPlayer.socket.emit("playerJoined", usernames)
+    waitingPlayer.socket.emit("players", usernames)
   );
 }
 
 function removePlayer(socket) {
-  waitingPlayers.filter(player => player.socket === socket);
-  // Remove player in match?
+  const player = waitingPlayers.find(p => p.socket === socket);
+  if (player) {
+    waitingPlayers.splice(waitingPlayers.indexOf(player), 1);
+    if (newMatch && socket === newMatch.host) {
+      newMatch = null;
+    }
+
+    const usernames = waitingPlayers.map(p => p.username);
+    waitingPlayers.map(waitingPlayer =>
+      waitingPlayer.socket.emit("players", usernames)
+    );
+  }
+
+  const ongoingMatch = matches.find(m => m.getPlayer(socket));
+  if (ongoingMatch) {
+    ongoingMatch.removePlayer(socket);
+    if (ongoingMatch.players.length < 1) {
+      matches.splice(matches.indexOf(ongoingMatch), 1);
+    }
+    // Notify players?
+  }
 }
 
 module.exports = {

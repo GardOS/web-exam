@@ -85,7 +85,7 @@ class Game extends Component {
       this.setState({ gameState: this.gameStateEnum.done });
     });
 
-    this.socket.on("playerJoined", players => {
+    this.socket.on("players", players => {
       this.setState({ isPlaying: true });
       this.setState({ players });
     });

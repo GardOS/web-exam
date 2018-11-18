@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 const Results = props =>
   props.results ? (
     <div>
-      {console.log(props)}
       {props.results.map(player => (
         <h2>{`${player.username}: ${player.score}`}</h2>
       ))}

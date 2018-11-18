@@ -23,6 +23,15 @@ class Match {
     return this.players.find(player => player.socket === socket);
   }
 
+  removePlayer(socket) {
+    const player = this.getPlayer(socket);
+    this.players.splice(this.players.indexOf(player), 1);
+
+    if (this.isTurnComplete()) {
+      this.nextQuestion();
+    }
+  }
+
   setTimer() {
     if (this.timer) {
       clearInterval(this.timer);
@@ -52,7 +61,7 @@ class Match {
   }
 
   isMatchDone() {
-    return this.turn === this.questions.length;
+    return this.isTurnComplete() && this.turn === this.questions.length;
   }
 
   answerQuestion(socket, answer) {
@@ -67,6 +76,10 @@ class Match {
       player.score += 3 + timeScore;
     }
     player.hasAnswered = true;
+
+    if (this.isTurnComplete()) {
+      this.nextQuestion();
+    }
   }
 
   start(players) {
@@ -76,6 +89,10 @@ class Match {
   }
 
   nextQuestion() {
+    if (this.isMatchDone()) {
+      this.messagePlayers("done", this.getResults());
+      return;
+    }
     const question = this.questions[this.turn];
     this.turn += 1;
     this.setTimer();
