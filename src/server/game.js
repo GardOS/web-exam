@@ -1,25 +1,50 @@
 const Match = require("./match");
 
-const players = [];
-let match = null;
+const waitingPlayers = [];
+const matches = []; // TODO: Remove done matches
+let newMatch = null;
 
-function socketConfig(socket) {
-  socket.on("answer", answer => {
-    match.answerQuestion(socket, answer);
-  });
+function findMatch(socket) {
+  return matches.find(m => m.getPlayer(socket).socket === socket);
 }
 
-function addPlayer(username, socket) {
-  const player = { username, socket, score: 0, hasAnswered: false };
-  players.push(player);
-  socketConfig(socket);
-  if (players.length > 1) {
-    match = new Match(players.shift(), players.shift());
+function createMatch(socket) {
+  if (newMatch === null) {
+    newMatch = new Match(socket);
+    socket.emit("gameCreated");
   }
 }
 
-function removePlayer(socket) {
-  players.filter(player => player.socket === socket);
+function startMatch(socket) {
+  if (waitingPlayers.length > 1 && newMatch && socket === newMatch.host) {
+    newMatch.start(waitingPlayers.splice(0));
+    matches.push(newMatch);
+    newMatch = null;
+  }
 }
 
-module.exports = { addPlayer, removePlayer };
+function answerQuestion(socket, answer) {
+  const match = findMatch(socket);
+  match.answerQuestion(socket, answer);
+}
+
+function addPlayer(socket, username) {
+  const player = { username, socket, score: 0, hasAnswered: false };
+  waitingPlayers.push(player);
+  socket.emit("playerJoined");
+
+  // Emit new player
+}
+
+function removePlayer(socket) {
+  waitingPlayers.filter(player => player.socket === socket);
+  // Remove player in match?
+}
+
+module.exports = {
+  createMatch,
+  startMatch,
+  addPlayer,
+  removePlayer,
+  answerQuestion
+};

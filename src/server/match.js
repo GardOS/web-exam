@@ -1,7 +1,7 @@
 class Match {
-  constructor(playerOne, playerTwo) {
-    this.playerOne = playerOne;
-    this.playerTwo = playerTwo;
+  constructor(host) {
+    this.host = host;
+    this.players = null;
     this.turn = 0;
     this.time = 11;
     this.timer = null;
@@ -17,18 +17,10 @@ class Match {
         correctAnswer: 3
       }
     ];
-
-    this.nextQuestion();
   }
 
   getPlayer(socket) {
-    if (socket === this.playerOne.socket) {
-      return this.playerOne;
-    }
-    if (socket === this.playerTwo.socket) {
-      return this.playerTwo;
-    }
-    return null;
+    return this.players.find(player => player.socket === socket);
   }
 
   setTimer() {
@@ -56,7 +48,7 @@ class Match {
   }
 
   isTurnComplete() {
-    return this.playerOne.hasAnswered && this.playerTwo.hasAnswered;
+    return !this.players.some(player => !player.hasAnswered);
   }
 
   isMatchDone() {
@@ -81,33 +73,39 @@ class Match {
     }
   }
 
+  start(players) {
+    this.players = players;
+    this.messagePlayers("gameStarted");
+    this.nextQuestion();
+  }
+
   nextQuestion() {
     if (this.isMatchDone()) {
-      this.playerOne.socket.emit("done", this.getResults());
-      this.playerTwo.socket.emit("done", this.getResults());
+      console.log(this.getResults());
+      this.messagePlayers("done", this.getResults());
+
       return;
     }
 
     const question = this.questions[this.turn];
     this.turn += 1;
     this.setTimer();
-    this.playerOne.socket.emit("question", question);
-    this.playerTwo.socket.emit("question", question);
-    this.playerOne.hasAnswered = false;
-    this.playerTwo.hasAnswered = false;
+    this.messagePlayers("question", question);
+
+    this.players.forEach(player => {
+      player.hasAnswered = false;
+    });
+  }
+
+  messagePlayers(message, payload = null) {
+    this.players.map(player => player.socket.emit(message, payload));
   }
 
   getResults() {
-    return {
-      playerOne: {
-        username: this.playerOne.username,
-        score: this.playerOne.score
-      },
-      playerTwo: {
-        username: this.playerTwo.username,
-        score: this.playerTwo.score
-      }
-    };
+    return this.players.map(player => ({
+      username: player.username,
+      score: player.score
+    }));
   }
 }
 

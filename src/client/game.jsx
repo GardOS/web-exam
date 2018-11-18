@@ -10,11 +10,14 @@ class Game extends Component {
   constructor() {
     super();
 
+    this.gameStateEnum = Object.freeze({ new: 0, inProgress: 1, done: 2 });
+
     this.state = {
-      connected: false,
+      isPlaying: false,
       currentQuestion: null,
-      results: null,
-      isGameDone: false
+      results: [],
+      isHost: false,
+      gameState: this.gameStateEnum.new
     };
 
     Game.propTypes = {
@@ -24,6 +27,27 @@ class Game extends Component {
     this.socket = null;
 
     this.handleAnswer = this.handleAnswer.bind(this);
+  }
+
+  componentDidMount() {
+    fetch("http://localhost:3000/wstoken", {
+      method: "post",
+      credentials: "include"
+    })
+      .then(res => {
+        if (res.ok) {
+          return res.json();
+        }
+        return null;
+      })
+      .then(message => {
+        if (message && message.wstoken) {
+          this.createSocket();
+
+          this.socket.emit("login", message.wstoken);
+        }
+      })
+      .catch(err => alert(`Failed to connect to server. Error: ${err}`));
   }
 
   componentWillUnmount() {
@@ -40,7 +64,7 @@ class Game extends Component {
     });
 
     this.socket.on("disconnect", () => {
-      this.setState({ connected: false });
+      this.setState({ isPlaying: false });
       console.log("Disconnected!");
     });
 
@@ -55,34 +79,21 @@ class Game extends Component {
     this.socket.on("done", results => {
       this.setState({ results });
       this.setState({ currentQuestion: null });
-      this.setState({ isGameDone: true });
+      this.setState({ gameState: this.gameStateEnum.done });
     });
-  }
 
-  connect() {
-    this.createSocket();
+    this.socket.on("playerJoined", () => {
+      this.setState({ isPlaying: true });
+    });
 
-    fetch("http://localhost:3000/wstoken", {
-      method: "post",
-      credentials: "include"
-    })
-      .then(res => {
-        if (res.ok) {
-          return res.json();
-        }
-        if (res.status === 401) {
-          alert("You should log in first");
-        }
-        return null;
-      })
-      .then(message => {
-        if (message && message.wstoken) {
-          this.socket.emit("login", message.wstoken);
-          this.socket.emit("start");
-          this.setState({ connected: true });
-        }
-      })
-      .catch(err => alert(`Failed to connect to server. Error: ${err}`));
+    this.socket.on("gameCreated", () => {
+      this.setState({ isHost: true });
+    });
+
+    this.socket.on("gameStarted", () => {
+      this.setState({ isHost: true });
+      this.setState({ gameState: this.gameStateEnum.inProgress });
+    });
   }
 
   handleAnswer(answer) {
@@ -91,33 +102,63 @@ class Game extends Component {
   }
 
   renderGame() {
-    if (this.state.isGameDone) {
-      return <Results results={this.state.results} />;
+    switch (this.state.gameState) {
+      case this.gameStateEnum.new:
+        return this.state.isHost ? (
+          <button
+            type="button"
+            className="btn btn-block btn-primary align-middle"
+            onClick={() => {
+              this.socket.emit("start");
+            }}
+          >
+            {"Start game"}
+          </button>
+        ) : (
+          <div>Waiting for host</div>
+        );
+      case this.gameStateEnum.inProgress:
+        return this.state.currentQuestion ? (
+          <Question
+            question={this.state.currentQuestion}
+            handleAnswer={this.handleAnswer}
+          />
+        ) : (
+          <div>Waiting for opponent(s)</div>
+        );
+      case this.gameStateEnum.done:
+        return <Results results={this.state.results} />;
+      default:
+        return <div>Something went wrong. Cannot track game state.</div>;
     }
-
-    return this.state.currentQuestion ? (
-      <Question
-        question={this.state.currentQuestion}
-        handleAnswer={this.handleAnswer}
-      />
-    ) : (
-      <div>Waiting for opponent</div>
-    );
   }
 
   render() {
     return this.props.isLoggedIn() ? (
       <div>
-        {this.state.connected ? (
+        {this.state.isPlaying ? (
           this.renderGame()
         ) : (
-          <button
-            type="button"
-            className="btn btn-block btn-primary align-middle"
-            onClick={() => this.connect()}
-          >
-            {"Find match"}
-          </button>
+          <div>
+            <button
+              type="button"
+              className="btn btn-block btn-primary align-middle"
+              onClick={() => {
+                this.socket.emit("create");
+              }}
+            >
+              {"Create game"}
+            </button>
+            <button
+              type="button"
+              className="btn btn-block btn-primary align-middle"
+              onClick={() => {
+                this.socket.emit("join");
+              }}
+            >
+              {"Join game"}
+            </button>
+          </div>
         )}
       </div>
     ) : (
