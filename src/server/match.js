@@ -67,10 +67,6 @@ class Match {
       player.score += 3 + timeScore;
     }
     player.hasAnswered = true;
-
-    if (this.isTurnComplete()) {
-      this.nextQuestion();
-    }
   }
 
   start(players) {
@@ -80,13 +76,6 @@ class Match {
   }
 
   nextQuestion() {
-    if (this.isMatchDone()) {
-      console.log(this.getResults());
-      this.messagePlayers("done", this.getResults());
-
-      return;
-    }
-
     const question = this.questions[this.turn];
     this.turn += 1;
     this.setTimer();

@@ -1,7 +1,7 @@
 const Match = require("./match");
 
 const waitingPlayers = [];
-const matches = []; // TODO: Remove done matches
+const matches = [];
 let newMatch = null;
 
 function findMatch(socket) {
@@ -26,6 +26,14 @@ function startMatch(socket) {
 function answerQuestion(socket, answer) {
   const match = findMatch(socket);
   match.answerQuestion(socket, answer);
+  if (match.isTurnComplete()) {
+    if (match.isMatchDone()) {
+      match.messagePlayers("done", match.getResults());
+      matches.splice(matches.indexOf(match), 1);
+    } else {
+      match.nextQuestion();
+    }
+  }
 }
 
 function addPlayer(socket, username) {
