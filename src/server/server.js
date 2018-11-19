@@ -1,5 +1,5 @@
+const path = require("path");
 const express = require("express");
-const cors = require("cors");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
@@ -11,12 +11,6 @@ const userApi = require("./api/auth-api");
 const quizApi = require("./api/quiz-api");
 
 const app = express();
-app.use(
-  cors({
-    origin: "http://localhost:8080",
-    credentials: true
-  })
-);
 app.use(bodyParser.json());
 
 app.use(
@@ -63,10 +57,15 @@ passport.deserializeUser((username, cb) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(userApi);
-app.use(quizApi);
+app.use("/api", userApi);
+app.use("/api", quizApi);
 
-const port = 3000;
+app.use(express.static("public"));
+app.use((req, res) => {
+  res.sendFile(path.resolve(__dirname, "..", "..", "public", "index.html"));
+});
+
+const port = 8080;
 const httpServer = app.listen(port, () =>
   console.log(`Listening on port ${port}.`)
 );

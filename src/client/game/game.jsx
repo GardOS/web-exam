@@ -33,9 +33,8 @@ class Game extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/wstoken", {
-      method: "post",
-      credentials: "include"
+    fetch("/api/wstoken", {
+      method: "post"
     })
       .then(res => {
         if (res.ok) {
@@ -60,7 +59,7 @@ class Game extends Component {
   }
 
   createSocket() {
-    this.socket = io("http://localhost:3000");
+    this.socket = io(window.location.origin);
 
     this.socket.on("connect", () => {
       console.log("Connected!");

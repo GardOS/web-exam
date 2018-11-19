@@ -18,9 +18,8 @@ class Quiz extends Component {
   }
 
   createQuiz() {
-    fetch("http://localhost:3000/quizzes", {
+    fetch("/api/quizzes", {
       method: "post",
-      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
