@@ -56,5 +56,29 @@ const User = mongoose.model("User", {
 
 // Init data
 // new User({ username: "User", password: "pwd" }).save();
+new Quiz({
+  questions: [
+    {
+      questionText: "What is 1+1?",
+      answers: ["2", "4", "8", "16"],
+      correctAnswer: 1
+    },
+    {
+      questionText: "What is 2+2?",
+      answers: ["2", "4", "8", "16"],
+      correctAnswer: 1
+    },
+    {
+      questionText: "What is 4+4?",
+      answers: ["2", "4", "8", "16"],
+      correctAnswer: 1
+    },
+    {
+      questionText: "What is 8+8?",
+      answers: ["2", "4", "8", "16"],
+      correctAnswer: 1
+    }
+  ]
+}).save();
 
 module.exports = { Quiz, User };
