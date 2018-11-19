@@ -24,7 +24,7 @@ function createMatch(socket) {
   if (newMatch === null) {
     Quiz.countDocuments().exec((countErr, count) => {
       if (countErr) {
-        this.messagePlayers("errorEvent", {
+        socket.emit("errorEvent", {
           error: "Error when finding quiz"
         });
         return;
@@ -35,7 +35,7 @@ function createMatch(socket) {
         .skip(random)
         .exec((findErr, result) => {
           if (findErr || !result) {
-            this.messagePlayers("errorEvent", {
+            socket.emit("errorEvent", {
               error: "Error when finding quiz"
             });
             return;
