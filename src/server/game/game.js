@@ -58,7 +58,7 @@ function startMatch(socket) {
 function answerQuestion(socket, answer) {
   const match = findMatch(socket);
   match.answerQuestion(socket, answer);
-  if (match.isMatchDone()) {
+  if (match.isMatchDone) {
     matches.splice(matches.indexOf(match), 1);
   }
 }
