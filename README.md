@@ -37,10 +37,11 @@ Represent the backend and is structured like so:
 
 The project is written in JavaScript and is built using webpack/babel.
 
-Libraries:
+Libraries/tools:
 
 - Passport: Authentication.
 - Socket.io: Real-time communication
+- Eslint + prettier: Used to ensure consistent code style and conventions.
 
 ### Frontend
 
@@ -58,32 +59,41 @@ Libraries:
 
 ## Setting up and running application
 
-### Prerequisites
+### Local
+
+#### Prerequisites
 
 1. Node/Npm
 2. Docker installed and running
 3. Docker-compose
 4. Modern web browser (application has been tested and developed in chrome/firefox)
 
-### Steps
+#### Steps
 
 1. `npm install`
-2. `npm start`
+2. `npm run build`
+3. `npm run db` 
+4. `npm start`
 
-When done: `npm run stop` or `docker-compose down`.
+When done: `npm run stop` or `docker-compose down` (shut down DB).
 
 Note:
 
 - On start, placeholder data is created for convenience. Therefore, restarting the application without resetting the db/container will result in duplicates.
-- `npm start` is setting up a docker container in the background, since this is happening concurrently the app may have started before the container. To remedy this, there is a retry-policy in place. Therefore the application may not work until you see the message `Connected to MongoDB container`.
+- `npm run db` is setting up a docker container in the background. If pulling the image takes too long, then it might happen concurrently with the application starting. To remedy this, there is a retry-policy in place. You should therefore look for: `Connected to MongoDB`. The application may not work until you see this message.
+
+### Heroku
+
+Application can be reached at: https://pg6300-web-exam.herokuapp.com/.
 
 ## Further development/improvements
 
 Time limitations and exam scope makes this project not 100% done. Below is what further development would have involved:
 
 1. Improve the feedback to the user. Currently window.alert() is used for notifying users, which is a bad practice. The feedback from the backend to frontend is also lacking. Where there are details happening that should be reflected to the client such as users leaving midgame etc.
-2. The pages are pretty barren. The "plan" would be to include more stuff to do and see on each page and improve the design.
-3. The game section should allow the players to create their own lobbies with it's own ID similar to "Kahoot!" and the ability to choose between quizzes.
+2. The pages are pretty barren. The "plan" would be to include more stuff to do/see on each page and improve the design.
+3. The game section should allow the players to create their own lobbies with it's own ID similar to "Kahoot!" and the ability to choose between quizzes. In order to achieve this I would have used socket.io rooms.
 4. The quiz section is not done and is lacking some functionality. Currently you can only create a quiz with a single question (or use the API), which is not ideal. The quiz section should also allow you to do all CRUD-operations.
 5. The way the backend is designed is not robust enough. I'm sure there are ways to ensure that the backend crashes or is stuck if you put some effort in it, and I don't think there would be a way for it to recover without a reboot.
-6. A leaderboard/highscore system for quizzes and individual players.
+6. The codebase could use some structural and semantic changes. The way it structured now has some code smell and could use some improvements.
+7. A leaderboard/highscore system for quizzes and individual players.
