@@ -65,7 +65,7 @@ app.use((req, res) => {
   res.sendFile(path.resolve(__dirname, "..", "..", "public", "index.html"));
 });
 
-const port = 8080;
+const port = process.env.PORT || 8080;
 const httpServer = app.listen(port, () =>
   console.log(`Listening on port ${port}.`)
 );

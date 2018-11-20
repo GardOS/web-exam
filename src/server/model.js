@@ -4,9 +4,15 @@ const Schema = mongoose.Schema;
 
 mongoose.set("useCreateIndex", true);
 
+const mongoUrl = process.env.HEROKU
+  ? `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@ds029381.mlab.com:29381/web-exam`
+  : "mongodb://localhost:27017";
+
+console.log(mongoUrl);
+
 function connectWithRetry() {
   return mongoose.connect(
-    "mongodb://localhost:27017",
+    mongoUrl,
     { useNewUrlParser: true },
     err => {
       if (err) {
@@ -15,7 +21,7 @@ function connectWithRetry() {
         );
         setTimeout(connectWithRetry, 5000);
       } else {
-        console.log("Connected to MongoDB container");
+        console.log("Connected to MongoDB");
       }
     }
   );
@@ -61,7 +67,7 @@ new Quiz({
     {
       questionText: "What is 1+1?",
       answers: ["2", "4", "8", "16"],
-      correctAnswer: 1
+      correctAnswer: 0
     },
     {
       questionText: "What is 2+2?",
@@ -71,12 +77,12 @@ new Quiz({
     {
       questionText: "What is 4+4?",
       answers: ["2", "4", "8", "16"],
-      correctAnswer: 1
+      correctAnswer: 2
     },
     {
       questionText: "What is 8+8?",
       answers: ["2", "4", "8", "16"],
-      correctAnswer: 1
+      correctAnswer: 3
     }
   ]
 }).save();
