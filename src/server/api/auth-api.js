@@ -13,17 +13,6 @@ const isUserValid = body => {
   return false;
 };
 
-router.get("/users", (req, res) => {
-  User.find((err, users) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.send(users);
-    }
-    return null;
-  });
-});
-
 router.get("/user", (req, res) => {
   if (!req.user) {
     res.status(401).send();

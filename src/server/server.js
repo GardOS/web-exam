@@ -7,7 +7,7 @@ const passport = require("passport");
 const Strategy = require("passport-local").Strategy;
 const { User } = require("./model");
 const { createWsServer } = require("./ws/ws-server");
-const userApi = require("./api/auth-api");
+const authApi = require("./api/auth-api");
 const quizApi = require("./api/quiz-api");
 
 const app = express();
@@ -57,7 +57,7 @@ passport.deserializeUser((username, cb) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api", userApi);
+app.use("/api", authApi);
 app.use("/api", quizApi);
 
 app.use(express.static("public"));

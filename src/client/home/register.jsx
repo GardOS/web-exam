@@ -114,7 +114,6 @@ class Register extends Component {
         <label htmlFor="register-terms-and-conditions">
           <input
             required
-            checked
             id="register-terms-and-conditions"
             type="checkbox"
             onChange={e =>
