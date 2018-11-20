@@ -121,7 +121,7 @@ class Register extends Component {
               this.setState({ termsAndConditions: e.target.checked })
             }
           />
-          {"Forfeit soul"}
+          {"Terms and Conditions"}
         </label>
         <div>
           <button type="submit" className="btn btn-primary btn-block">

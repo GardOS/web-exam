@@ -5,10 +5,10 @@ const Schema = mongoose.Schema;
 mongoose.set("useCreateIndex", true);
 
 const mongoUrl = process.env.HEROKU
-  ? `mongodb://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@ds029381.mlab.com:29381/web-exam`
+  ? `mongodb://
+  ${process.env.DB_USERNAME}:
+  ${process.env.DB_PASSWORD}@ds029381.mlab.com:29381/web-exam`
   : "mongodb://localhost:27017";
-
-console.log(mongoUrl);
 
 function connectWithRetry() {
   return mongoose.connect(
@@ -16,9 +16,7 @@ function connectWithRetry() {
     { useNewUrlParser: true },
     err => {
       if (err) {
-        console.error(
-          "Failed to connect to MongoDB on startup - retrying in 5 sec"
-        );
+        console.error("Failed to connect to MongoDB on startup - retrying in 5 sec");
         setTimeout(connectWithRetry, 5000);
       } else {
         console.log("Connected to MongoDB");
