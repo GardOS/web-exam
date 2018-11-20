@@ -84,7 +84,8 @@ Note:
 
 ### Heroku
 
-Application can be reached at: https://pg6300-web-exam.herokuapp.com/.
+Application can be reached at: https://pg6300-web-exam.herokuapp.com/. 
+Note: mLab is used as a Database-as-a-Service instead of using docker container.
 
 ## Further development/improvements
 
