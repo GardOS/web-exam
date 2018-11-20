@@ -1,5 +1,7 @@
 # PG6300 Exam
 
+### [Exam text.](PG6300%20Webutvikling%20og%20API-design.pdf)
+
 ## Functionality
 
 **General:**
@@ -35,13 +37,14 @@ Represent the backend and is structured like so:
 
 ### General
 
-The project is written in JavaScript and is built using webpack/babel.
+The application is written with the MERN-stack in JavaScript and is built with webpack/babel.
 
 Libraries/tools:
 
 - Passport: Authentication.
 - Socket.io: Real-time communication
 - Eslint + prettier: Used to ensure consistent code style and conventions.
+- MongoDB: Data storage
 
 ### Frontend
 
