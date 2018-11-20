@@ -85,7 +85,7 @@ Note:
 ### Heroku
 
 Application can be reached at: https://pg6300-web-exam.herokuapp.com/. 
-Note: mLab is used as a Database-as-a-Service instead of using docker container.
+Note: mLab is used as a Database-as-a-Service instead of using a docker container.
 
 ## Further development/improvements
 
@@ -96,5 +96,5 @@ Time limitations and exam scope makes this project not 100% done. Below is what 
 3. The game section should allow the players to create their own lobbies with it's own ID similar to "Kahoot!" and the ability to choose between quizzes. In order to achieve this I would have used socket.io rooms.
 4. The quiz section is not done and is lacking some functionality. Currently you can only create a quiz with a single question (or use the API), which is not ideal. The quiz section should also allow you to do all CRUD-operations.
 5. The way the backend is designed is not robust enough. I'm sure there are ways to ensure that the backend crashes or is stuck if you put some effort in it, and I don't think there would be a way for it to recover without a reboot.
-6. The codebase could use some structural and semantic changes. The way it structured now has some code smell and could use some improvements.
+6. The codebase could use some structural and semantic changes. The way it is structured now has some code smell and could use some improvements.
 7. A leaderboard/highscore system for quizzes and individual players.
