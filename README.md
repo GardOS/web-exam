@@ -1,5 +1,7 @@
 # PG6300 Exam
 
+This repository is my delivery of the home exam in the subject _PG6300 Web Development and API Design_. "Curriculum" and code inspiration can be found in Andrea Arcuri's (lecturer) repository found [here](https://github.com/arcuri82/pg6300).
+
 ### [Exam text.](PG6300%20Webutvikling%20og%20API-design.pdf)
 
 ## Functionality
